@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Property Portfolio - Executive Dashboard</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              cream: '#F4EFEA',
+              card: '#FFFFFF',
+              darkcard: '#1F2E28',
+              sidebar: '#F8F6F2',
+              sage: '#3B5749',
+              sagedark: '#273C32',
+              sagelight: '#EBF1ED',
+              accent: '#3D6151',
+              charcoal: '#18221D',
+              muted: '#7B8A82',
+              line: '#E7E2DB'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      user-select: none;
+    }
+
+    body {
+      background-color: #ECE6DE;
+      color: #1A2621;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Subtle Glass & Border styling */
+    .soft-card {
+      background: #FFFFFF;
+      border: 1px solid rgba(228, 222, 214, 0.9);
+      box-shadow: 0 4px 20px -2px rgba(45, 60, 52, 0.04), 0 2px 6px -1px rgba(45, 60, 52, 0.02);
+      transition: transform 0.25s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+      position: relative;
+    }
+
+    /* Subtle cursor glow spotlight on cards */
+    .soft-card::before {
+      content: '';
+      position: absolute;
+      top: var(--mouse-y, -120px);
+      left: var(--mouse-x, -120px);
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle closest-side, rgba(59, 87, 73, 0.08), transparent 80%);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      border-radius: 9999px;
+      z-index: 2;
+    }
+
+    .soft-card:hover::before {
+      opacity: 1;
+    }
+
+    .soft-card:hover {
+      box-shadow: 0 10px 24px -4px rgba(45, 60, 52, 0.08), 0 4px 10px -2px rgba(45, 60, 52, 0.04);
+      border-color: rgba(59, 87, 73, 0.25);
+    }
+
+    /* Interactive Stacked 3D Cards */
+    .card-stack {
+      perspective: 900px;
+    }
+
+    .stacked-card {
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transform-style: preserve-3d;
+      box-shadow: 0 12px 24px -6px rgba(18, 30, 24, 0.3);
+    }
+
+    .card-stack:hover .card-back {
+      transform: translateY(-16px) rotate(-10deg) scale(0.96);
+    }
+    .card-stack:hover .card-mid {
+      transform: translateY(-8px) rotate(-4deg) scale(0.98);
+    }
+    .card-stack:hover .card-front {
+      transform: translateY(4px) rotate(3deg) scale(1.02);
+    }
+
+    /* Custom Gauge SVG Ring */
+    .gauge-circle {
+      stroke-dasharray: 283;
+      stroke-dashoffset: calc(283 - (283 * 74) / 100);
+      transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Chart cursor guide line */
+    #chart-guide {
+      pointer-events: none;
+      transition: opacity 0.15s ease;
+    }
+  </style>
+</head>
+
+<body class="p-2 sm:p-3 md:p-5 min-h-screen flex items-center justify-center">
+
+  <div class="w-full max-w-[1360px] bg-[#F4EFEA] rounded-[32px] border border-[#E3DDD4] p-3 sm:p-5 md:p-6 shadow-2xl relative">
+    
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6 items-start">
+
+      <!-- ================= SIDEBAR (COMPACT) ================= -->
+      <aside class="lg:col-span-3 xl:col-span-2 bg-[#F9F7F3] rounded-[26px] p-3.5 flex flex-col justify-between border border-[#E7E2D9] h-full min-h-[720px]">
+        
+        <div>
+          <!-- Logo Pill Badge -->
+          <div class="flex items-center justify-between pb-4 border-b border-[#EBE6DE]">
+            <div class="bg-[#2B3B34] text-white px-3.5 py-1.5 rounded-xl font-bold text-xs tracking-wider uppercase shadow-sm flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+              PROPERTY
+            </div>
+            <span class="text-[10px] text-brand-muted font-medium uppercase tracking-wider">v2.4</span>
+          </div>
+
+          <!-- Navigation Links -->
+          <nav class="mt-4 space-y-1">
+            <!-- Active Dashboard Link -->
+            <a href="#" class="flex items-center justify-between px-3 py-2 rounded-xl bg-[#3B5749] text-white font-medium text-xs shadow-md shadow-[#3B5749]/20 transition-all">
+              <div class="flex items-center gap-2.5">
+                <svg class="w-4 h-4 text-emerald-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+                <span>Dashboard</span>
+              </div>
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-300"></span>
+            </a>
+
+            <!-- Properties Link -->
+            <a href="#" class="flex items-center justify-between px-3 py-2 rounded-xl text-[#53655C] hover:text-brand-charcoal hover:bg-white/80 font-medium text-xs transition-all">
+              <div class="flex items-center gap-2.5">
+                <svg class="w-4 h-4 text-[#7A8C82]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                <span>Properties</span>
+              </div>
+            </a>
+
+            <!-- Transfers Link -->
+            <a href="#" class="flex items-center justify-between px-3 py-2 rounded-xl text-[#53655C] hover:text-brand-charcoal hover:bg-white/80 font-medium text-xs transition-all">
+              <div class="flex items-center gap-2.5">
+                <svg class="w-4 h-4 text-[#7A8C82]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+                <span>Transfers</span>
+              </div>
+              <span class="px-1.5 py-0.5 text-[9px] font-bold text-white bg-[#E05D38] rounded-full">3</span>
+            </a>
+
+            <!-- Documents Link -->
+            <a href="#" class="flex items-center justify-between px-3 py-2 rounded-xl text-[#53655C] hover:text-brand-charcoal hover:bg-white/80 font-medium text-xs transition-all">
+              <div class="flex items-center gap-2.5">
+                <svg class="w-4 h-4 text-[#7A8C82]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                <span>Documents</span>
+              </div>
+            </a>
+
+            <!-- Payouts Link -->
+            <a href="#" class="flex items-center justify-between px-3 py-2 rounded-xl text-[#53655C] hover:text-brand-charcoal hover:bg-white/80 font-medium text-xs transition-all">
+              <div class="flex items-center gap-2.5">
+                <svg class="w-4 h-4 text-[#7A8C82]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                <span>Payouts</span>
+              </div>
+            </a>
+
+            <!-- Settings Link -->
+            <a href="#" class="flex items-center justify-between px-3 py-2 rounded-xl text-[#53655C] hover:text-brand-charcoal hover:bg-white/80 font-medium text-xs transition-all">
+              <div class="flex items-center gap-2.5">
+                <svg class="w-4 h-4 text-[#7A8C82]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                <span>Settings</span>
+              </div>
+            </a>
+          </nav>
+        </div>
+
+        <!-- Keeping You Safe Card (Dark compact badge at bottom) -->
+        <div class="bg-[#1C2C25] text-white rounded-2xl p-3 border border-emerald-950/40 relative overflow-hidden mt-6">
+          <div class="flex items-center gap-2 mb-1.5">
+            <span class="w-5 h-5 rounded-lg bg-emerald-700/60 border border-emerald-500/30 flex items-center justify-center text-[10px] text-emerald-300">
+              🛡️
+            </span>
+            <h4 class="text-xs font-bold tracking-tight text-emerald-100">Keeping you safe</h4>
+          </div>
+          <p class="text-[11px] text-emerald-200/70 leading-snug">
+            Two-factor authentication and ledger sync is active for this portfolio.
+          </p>
+          <button class="mt-2.5 w-full py-1.5 text-[11px] font-semibold text-emerald-100 bg-white/10 hover:bg-white/20 border border-white/10 rounded-xl transition-all active:scale-95">
+            Review security
+          </button>
+        </div>
+
+      </aside>
+
+      <!-- ================= MAIN CONTENT AREA ================= -->
+      <main class="lg:col-span-9 xl:col-span-10 flex flex-col gap-4">
+        
+        <!-- Header Bar -->
+        <header class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <span class="text-[10px] tracking-widest font-bold uppercase text-[#73837A]">Portfolio Overview</span>
+            <h1 class="text-xl sm:text-2xl font-bold text-[#14201A] tracking-tight">Welcome back, Nadia</h1>
+          </div>
+
+          <div class="flex items-center gap-2.5">
+            <!-- Search Input -->
+            <div class="relative flex items-center">
+              <input 
+                type="text" 
+                placeholder="Search unit or tenant..." 
+                class="w-48 sm:w-60 bg-white border border-[#DDD6CD] rounded-full pl-8 pr-3 py-1.5 text-xs text-[#1F2E28] placeholder-[#94A29B] focus:outline-none focus:ring-1 focus:ring-[#3B5749] shadow-sm transition-all"
+              />
+              <svg class="w-3.5 h-3.5 text-[#85968E] absolute left-3 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+              </svg>
+            </div>
+
+            <!-- Bell Notification -->
+            <button class="w-8 h-8 rounded-full bg-white border border-[#DDD6CD] flex items-center justify-center text-[#556960] hover:text-[#18231E] hover:border-[#3B5749] shadow-sm transition-all active:scale-95 relative">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-500 absolute top-2 right-2"></span>
+            </button>
+
+            <!-- User Avatar -->
+            <div class="w-8 h-8 rounded-full bg-[#273C32] text-white flex items-center justify-center font-bold text-xs shadow-sm border border-emerald-800">
+              NR
+            </div>
+          </div>
+        </header>
+
+        <!-- 4 Metric Cards Row -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+          
+          <!-- Card 1: Portfolio Value -->
+          <div class="soft-card p-3.5 rounded-2xl">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] font-medium text-[#73837A]">Portfolio value</span>
+              <span class="w-5 h-5 rounded-lg bg-[#EBF1ED] text-[#3B5749] flex items-center justify-center text-xs">
+                🏢
+              </span>
+            </div>
+            <div class="mt-1">
+              <span class="text-xl sm:text-2xl font-extrabold text-[#15221C] tracking-tight">$482,900</span>
+            </div>
+            <div class="mt-1 flex items-center gap-1.5">
+              <span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-md text-[10px] font-bold bg-[#E8F5EE] text-[#1B794B]">
+                ▲ 12.4%
+              </span>
+              <span class="text-[10px] text-[#83948B]">vs last month</span>
+            </div>
+          </div>
+
+          <!-- Card 2: Units Let -->
+          <div class="soft-card p-3.5 rounded-2xl">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] font-medium text-[#73837A]">Units let</span>
+              <span class="w-5 h-5 rounded-lg bg-[#EBF1ED] text-[#3B5749] flex items-center justify-center text-xs">
+                🔑
+              </span>
+            </div>
+            <div class="mt-1">
+              <span class="text-xl sm:text-2xl font-extrabold text-[#15221C] tracking-tight">38</span>
+            </div>
+            <div class="mt-1 flex items-center gap-1.5">
+              <span class="inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] font-bold bg-[#E8F5EE] text-[#1B794B]">
+                +4 new
+              </span>
+              <span class="text-[10px] text-[#83948B]">occupants</span>
+            </div>
+          </div>
+
+          <!-- Card 3: Occupancy -->
+          <div class="soft-card p-3.5 rounded-2xl">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] font-medium text-[#73837A]">Occupancy</span>
+              <span class="w-5 h-5 rounded-lg bg-[#EBF1ED] text-[#3B5749] flex items-center justify-center text-xs">
+                📊
+              </span>
+            </div>
+            <div class="mt-1">
+              <span class="text-xl sm:text-2xl font-extrabold text-[#15221C] tracking-tight">94%</span>
+            </div>
+            <div class="mt-1 flex items-center gap-1.5">
+              <span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-md text-[10px] font-bold bg-[#E8F5EE] text-[#1B794B]">
+                ▲ 2.1%
+              </span>
+              <span class="text-[10px] text-[#83948B]">high demand</span>
+            </div>
+          </div>
+
+          <!-- Card 4: Open Tickets -->
+          <div class="soft-card p-3.5 rounded-2xl">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] font-medium text-[#73837A]">Open tickets</span>
+              <span class="w-5 h-5 rounded-lg bg-[#F8EFEA] text-[#BA5032] flex items-center justify-center text-xs">
+                ⚠️
+              </span>
+            </div>
+            <div class="mt-1">
+              <span class="text-xl sm:text-2xl font-extrabold text-[#15221C] tracking-tight">7</span>
+            </div>
+            <div class="mt-1 flex items-center gap-1.5">
+              <span class="inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] font-bold bg-[#FBF0EC] text-[#BA5032]">
+                ✓ 3 closed
+              </span>
+              <span class="text-[10px] text-[#83948B]">today</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Middle Row: Interactive Wave Chart & Circular Earnings Gauge -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 items-stretch">
+          
+          <!-- Balance Overview Wave Chart (8 cols) -->
+          <div class="lg:col-span-8 soft-card p-4 rounded-2xl flex flex-col justify-between">
+            <div class="flex flex-wrap items-center justify-between gap-2 pb-2">
+              <div>
+                <h3 class="text-xs font-bold text-[#14201A] uppercase tracking-wide">Balance overview</h3>
+                <span class="text-[11px] text-[#73837A]">Net across all units & properties</span>
+              </div>
+
+              <div class="flex items-center gap-3">
+                <!-- Legend -->
+                <div class="flex items-center gap-3 text-[11px] text-[#697A72]">
+                  <span class="flex items-center gap-1">
+                    <span class="w-2 h-2 rounded-full bg-[#3B5749]"></span> Income
+                  </span>
+                  <span class="flex items-center gap-1">
+                    <span class="w-2 h-2 rounded-full bg-[#9EB3A8]"></span> Expenses
+                  </span>
+                </div>
+
+                <!-- Year Dropdown -->
+                <select class="text-xs bg-[#F4EFEA] border border-[#DDD6CD] rounded-lg px-2 py-1 text-[#22332A] font-semibold focus:outline-none cursor-pointer">
+                  <option>2026</option>
+                  <option>2025</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- SVG Smooth Wave Area Chart -->
+            <div class="relative w-full h-[140px] mt-2" id="chart-container">
+              <svg id="balance-chart" class="w-full h-full overflow-visible" viewBox="0 0 600 140" preserveAspectRatio="none">
+                <defs>
+                  <!-- Gradient for Wave Area -->
+                  <linearGradient id="sage-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#3B5749" stop-opacity="0.25" />
+                    <stop offset="85%" stop-color="#3B5749" stop-opacity="0.01" />
+                    <stop offset="100%" stop-color="#3B5749" stop-opacity="0" />
+                  </linearGradient>
+
+                  <!-- Dotted grid pattern -->
+                  <pattern id="dot-grid" width="30" height="25" patternUnits="userSpaceOnUse">
+                    <circle cx="2" cy="2" r="0.75" fill="#D5CEC4" />
+                  </pattern>
+                </defs>
+
+                <!-- Background Subtle Grid -->
+                <rect width="600" height="140" fill="url(#dot-grid)" />
+
+                <!-- Wave Area fill -->
+                <path d="M 0 110 C 60 110, 80 85, 140 85 C 190 85, 210 100, 270 95 C 330 90, 350 55, 410 40 C 470 25, 500 45, 600 35 L 600 140 L 0 140 Z" fill="url(#sage-gradient)" />
+
+                <!-- Wave Stroke Line -->
+                <path d="M 0 110 C 60 110, 80 85, 140 85 C 190 85, 210 100, 270 95 C 330 90, 350 55, 410 40 C 470 25, 500 45, 600 35" fill="none" stroke="#3B5749" stroke-width="2.5" stroke-linecap="round" />
+
+                <!-- Expenses secondary comparison line -->
+                <path d="M 0 125 C 80 125, 130 115, 210 118 C 290 120, 360 105, 440 95 C 510 88, 560 90, 600 88" fill="none" stroke="#B8C7BF" stroke-width="1.5" stroke-dasharray="3 3" />
+
+                <!-- Dynamic Chart Cursor Guide Line -->
+                <line id="chart-guide" x1="410" y1="0" x2="410" y2="140" stroke="#3B5749" stroke-width="1" stroke-dasharray="2 2" opacity="0.6" />
+                
+                <!-- Highlight Indicator Point -->
+                <circle id="chart-point" cx="410" cy="40" r="4.5" fill="#FFFFFF" stroke="#3B5749" stroke-width="3" />
+              </svg>
+
+              <!-- Chart Tooltip Pill -->
+              <div id="chart-tooltip" class="absolute -top-1 left-[64%] -translate-x-1/2 bg-[#17241E] text-white text-[10px] font-bold py-1 px-2.5 rounded-lg shadow-lg pointer-events-none flex flex-col items-center border border-emerald-900">
+                <span class="text-emerald-300 text-[9px] uppercase font-semibold">Oct 2026</span>
+                <span class="text-xs">$37,964</span>
+              </div>
+            </div>
+
+            <!-- Chart Month Labels -->
+            <div class="flex justify-between items-center text-[10px] text-[#7A8C83] font-medium pt-2 border-t border-[#EFEAE2]">
+              <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span><span class="text-[#16231D] font-bold">Oct</span><span>Nov</span><span>Dec</span>
+            </div>
+          </div>
+
+          <!-- Circular Earnings Gauge (4 cols) -->
+          <div class="lg:col-span-4 soft-card p-4 rounded-2xl flex flex-col justify-between items-center text-center">
+            <div class="w-full flex items-center justify-between pb-1">
+              <h3 class="text-xs font-bold text-[#14201A] uppercase tracking-wide">Earnings</h3>
+              <span class="text-[10px] text-[#73837A] bg-[#F4EFEA] px-2 py-0.5 rounded-full font-semibold">Q3 Target</span>
+            </div>
+
+            <!-- Circular Gauge Graphic -->
+            <div class="relative w-28 h-28 my-2 flex items-center justify-center">
+              <svg class="w-full h-full -rotate-90" viewBox="0 0 100 100">
+                <!-- Background Ring -->
+                <circle cx="50" cy="50" r="45" fill="none" stroke="#E7ECE9" stroke-width="8"></circle>
+                <!-- Progress Ring -->
+                <circle class="gauge-circle" cx="50" cy="50" r="45" fill="none" stroke="#3B5749" stroke-width="8" stroke-linecap="round"></circle>
+              </svg>
+              <!-- Center Inner Label -->
+              <div class="absolute flex flex-col items-center justify-center">
+                <span class="text-2xl font-extrabold text-[#15221C]">74%</span>
+                <span class="text-[9px] text-[#7B8B83] uppercase tracking-wider font-semibold">of target</span>
+              </div>
+            </div>
+
+            <div class="w-full pt-1 border-t border-[#EFEAE2] flex items-center justify-between text-xs">
+              <span class="text-[#73837A] text-[11px]">Estimated Q3</span>
+              <span class="text-sm font-extrabold text-[#15221C]">$38,420</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Bottom Row: 3D Stacked Wallet + Transfers List + Profile Summary -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-stretch">
+          
+          <!-- Card 1: Available Credit & 3D Interactive Stacked Cards (4 cols) -->
+          <div class="md:col-span-4 soft-card p-4 rounded-2xl flex flex-col justify-between min-h-[220px]">
+            <div>
+              <h3 class="text-xs font-bold text-[#14201A] uppercase tracking-wide">Available credit</h3>
+              <span class="text-[11px] text-[#73837A]">in digital wallet</span>
+              <p class="text-[11px] text-[#556960] mt-1 leading-snug">
+                Rent payouts and ledger reserves linked to this portfolio.
+              </p>
+            </div>
+
+            <!-- 3D Stacked Credit Cards Animation Preview -->
+            <div class="card-stack relative h-28 flex items-center justify-center my-1 cursor-pointer">
+              <!-- Back Card -->
+              <div class="stacked-card card-back absolute w-44 h-24 rounded-xl bg-gradient-to-tr from-[#9EB3A8] to-[#BACBC2] border border-white/60 p-2 text-white text-[9px] font-mono shadow-md -rotate-6 -translate-y-2">
+                <span class="opacity-70">RESERVE</span>
+              </div>
+              <!-- Mid Card -->
+              <div class="stacked-card card-mid absolute w-44 h-24 rounded-xl bg-gradient-to-tr from-[#4E6B5D] to-[#364F42] border border-white/40 p-2 text-white text-[9px] font-mono shadow-md -rotate-3 -translate-y-1">
+                <span class="opacity-70">ESCROW</span>
+              </div>
+              <!-- Front Card -->
+              <div class="stacked-card card-front absolute w-44 h-24 rounded-xl bg-gradient-to-tr from-[#1E2E27] to-[#121B17] border border-emerald-500/20 p-2.5 text-white flex flex-col justify-between shadow-xl">
+                <div class="flex items-center justify-between text-[8px] font-mono text-emerald-300">
+                  <span>BUSINESS BLACK</span>
+                  <span>•••• 5518</span>
+                </div>
+                <div class="text-[10px] font-bold text-slate-100 font-mono tracking-widest">
+                  NADIA RENNER
+                </div>
+              </div>
+            </div>
+
+            <button class="w-full py-1.5 px-3 rounded-xl bg-[#F4EFEA] hover:bg-[#EAE2D8] border border-[#DDD6CD] text-[#283830] text-xs font-semibold flex items-center justify-center gap-1.5 transition-all active:scale-95">
+              <span>+ Add new card</span>
+            </button>
+          </div>
+
+          <!-- Card 2: Recent Transfers List (5 cols) -->
+          <div class="md:col-span-5 soft-card p-4 rounded-2xl flex flex-col justify-between">
+            <div class="flex items-center justify-between pb-2 border-b border-[#EFEAE2]">
+              <div>
+                <h3 class="text-xs font-bold text-[#14201A] uppercase tracking-wide">Your transfers</h3>
+                <span class="text-[11px] text-[#73837A]">Latest property settlements</span>
+              </div>
+              <span class="text-[10px] font-semibold text-[#3B5749] bg-[#EBF1ED] px-2 py-0.5 rounded-full cursor-pointer hover:underline">This month ▾</span>
+            </div>
+
+            <!-- Transfer Items List (Compact) -->
+            <div class="space-y-2 my-2 text-xs">
+              
+              <!-- Item 1 -->
+              <div class="flex items-center justify-between hover:bg-[#F9F7F3] p-1 rounded-lg transition-colors">
+                <div class="flex items-center gap-2">
+                  <div class="w-7 h-7 rounded-lg bg-[#E2EBE5] text-[#2F473B] font-bold text-[10px] flex items-center justify-center">
+                    WC
+                  </div>
+                  <div>
+                    <h5 class="text-xs font-bold text-[#1E2B25] leading-none">Willow Court, 4M</h5>
+                    <span class="text-[10px] text-[#7B8B83]">Rent • 02 Sep</span>
+                  </div>
+                </div>
+                <span class="font-bold text-[#1E824C] text-xs">+$2,450</span>
+              </div>
+
+              <!-- Item 2 -->
+              <div class="flex items-center justify-between hover:bg-[#F9F7F3] p-1 rounded-lg transition-colors">
+                <div class="flex items-center gap-2">
+                  <div class="w-7 h-7 rounded-lg bg-[#E1E7F0] text-[#2E415E] font-bold text-[10px] flex items-center justify-center">
+                    HL
+                  </div>
+                  <div>
+                    <h5 class="text-xs font-bold text-[#1E2B25] leading-none">Harbour Lofts</h5>
+                    <span class="text-[10px] text-[#7B8B83]">Deposit • 29 Aug</span>
+                  </div>
+                </div>
+                <span class="font-bold text-[#1E824C] text-xs">+$1,800</span>
+              </div>
+
+              <!-- Item 3 -->
+              <div class="flex items-center justify-between hover:bg-[#F9F7F3] p-1 rounded-lg transition-colors">
+                <div class="flex items-center gap-2">
+                  <div class="w-7 h-7 rounded-lg bg-[#FBECE6] text-[#A64326] font-bold text-[10px] flex items-center justify-center">
+                    MC
+                  </div>
+                  <div>
+                    <h5 class="text-xs font-bold text-[#1E2B25] leading-none">Maintenance co.</h5>
+                    <span class="text-[10px] text-[#7B8B83]">Repair • 27 Aug</span>
+                  </div>
+                </div>
+                <span class="font-bold text-[#BA5032] text-xs">-$440</span>
+              </div>
+
+              <!-- Item 4 -->
+              <div class="flex items-center justify-between hover:bg-[#F9F7F3] p-1 rounded-lg transition-colors">
+                <div class="flex items-center gap-2">
+                  <div class="w-7 h-7 rounded-lg bg-[#E6ECE8] text-[#2C4237] font-bold text-[10px] flex items-center justify-center">
+                    DR
+                  </div>
+                  <div>
+                    <h5 class="text-xs font-bold text-[#1E2B25] leading-none">Elm Row, 12</h5>
+                    <span class="text-[10px] text-[#7B8B83]">Rent • 24 Aug</span>
+                  </div>
+                </div>
+                <span class="font-bold text-[#1E824C] text-xs">+$1,375</span>
+              </div>
+
+            </div>
+
+            <div class="pt-2 border-t border-[#EFEAE2] flex justify-between items-center text-[10px] text-[#788981]">
+              <span>4 of 24 completed</span>
+              <a href="#" class="font-semibold text-[#3B5749] hover:underline">View ledger →</a>
+            </div>
+          </div>
+
+          <!-- Card 3: Nadia Renner Profile Overview (3 cols) -->
+          <div class="md:col-span-3 bg-[#24352D] text-white p-4 rounded-2xl flex flex-col justify-between shadow-lg border border-emerald-950/40">
+            <div>
+              <div class="flex items-center justify-between">
+                <div class="w-9 h-9 rounded-full bg-emerald-800/80 border border-emerald-600/40 flex items-center justify-center text-xs font-bold text-white shadow-inner">
+                  NR
+                </div>
+                <span class="text-[9px] px-2 py-0.5 rounded-full bg-white/10 text-emerald-200 border border-white/10 uppercase tracking-wider font-semibold">Owner</span>
+              </div>
+
+              <div class="mt-3">
+                <h4 class="text-sm font-bold text-white leading-tight">Nadia Renner</h4>
+                <span class="text-[11px] text-emerald-200/70">Portfolio Manager</span>
+              </div>
+
+              <!-- Mini Stats Grid -->
+              <div class="grid grid-cols-2 gap-2 mt-3 pt-3 border-t border-emerald-800/60">
+                <div class="bg-black/20 rounded-xl p-2 text-center">
+                  <span class="text-base font-extrabold text-white">26</span>
+                  <p class="text-[9px] text-emerald-200/70 uppercase">Units</p>
+                </div>
+                <div class="bg-black/20 rounded-xl p-2 text-center">
+                  <span class="text-base font-extrabold text-white">356</span>
+                  <p class="text-[9px] text-emerald-200/70 uppercase">Tenants</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Mini card representation in dark block -->
+            <div class="mt-3 p-2 bg-black/30 rounded-xl border border-white/5 flex items-center justify-between text-[10px] font-mono text-emerald-200/80">
+              <span>•••• •••• 5518</span>
+              <span class="text-emerald-400 font-bold">ACTIVE</span>
+            </div>
+          </div>
+
+        </div>
+
+      </main>
+    </div>
+
+    <!-- Minimal Footer Reference Badge -->
+    <div class="mt-4 pt-3 border-t border-[#E3DDD4] flex flex-wrap items-center justify-between text-[11px] text-[#7F8F87]">
+      <div class="flex items-center gap-2">
+        <span class="font-bold text-[#1D2B24]">Property Portfolio</span>
+        <span class="text-[#A4B2AA]">|</span>
+        <span>Personal & client use layout</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Synced live</span>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // 1. Mouse Spotlight and 3D Perspective Tilt on Cards
+    const cards = document.querySelectorAll('.soft-card');
+
+    cards.forEach((card) => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        card.style.setProperty('--mouse-x', `${x}px`);
+        card.style.setProperty('--mouse-y', `${y}px`);
+
+        // Subtle 3D tilt
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const rotateX = ((y - centerY) / centerY) * -3.5;
+        const rotateY = ((x - centerX) / centerX) * 3.5;
+        card.style.transform = `perspective(800px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(-2px)`;
+      });
+
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = `perspective(800px) rotateX(0deg) rotateY(0deg) translateY(0px)`;
+      });
+    });
+
+    // 2. Interactive Balance Wave Chart Cursor Guide & Tooltip
+    const chartContainer = document.getElementById('chart-container');
+    const chartGuide = document.getElementById('chart-guide');
+    const chartPoint = document.getElementById('chart-point');
+    const chartTooltip = document.getElementById('chart-tooltip');
+
+    const monthsData = [
+      { month: 'Jan', val: '$24,200', x: 20, y: 110 },
+      { month: 'Feb', val: '$27,800', x: 70, y: 98 },
+      { month: 'Mar', val: '$29,400', x: 130, y: 86 },
+      { month: 'Apr', val: '$28,100', x: 190, y: 92 },
+      { month: 'May', val: '$31,300', x: 250, y: 88 },
+      { month: 'Jun', val: '$32,900', x: 310, y: 78 },
+      { month: 'Jul', val: '$34,600', x: 360, y: 55 },
+      { month: 'Aug', val: '$36,100', x: 410, y: 40 },
+      { month: 'Sep', val: '$35,800', x: 460, y: 38 },
+      { month: 'Oct', val: '$37,964', x: 505, y: 36 },
+      { month: 'Nov', val: '$39,200', x: 550, y: 34 },
+      { month: 'Dec', val: '$41,500', x: 590, y: 32 }
+    ];
+
+    if (chartContainer) {
+      chartContainer.addEventListener('mousemove', (e) => {
+        const rect = chartContainer.getBoundingClientRect();
+        const mouseX = Math.max(0, Math.min(e.clientX - rect.left, rect.width));
+        const relativeX = (mouseX / rect.width) * 600;
+
+        // Find nearest month point
+        let closest = monthsData.reduce((prev, curr) => 
+          Math.abs(curr.x - relativeX) < Math.abs(prev.x - relativeX) ? curr : prev
+        );
+
+        // Update SVG guide and point positions
+        chartGuide.setAttribute('x1', closest.x);
+        chartGuide.setAttribute('x2', closest.x);
+        chartPoint.setAttribute('cx', closest.x);
+        chartPoint.setAttribute('cy', closest.y);
+
+        // Update Tooltip position & content
+        const pct = (closest.x / 600) * 100;
+        chartTooltip.style.left = `${pct}%`;
+        chartTooltip.innerHTML = `
+          <span class="text-emerald-300 text-[9px] uppercase font-semibold">${closest.month} 2026</span>
+          <span class="text-xs">${closest.val}</span>
+        `;
+      });
+
+      chartContainer.addEventListener('mouseleave', () => {
+        // Reset to October as default in reference
+        chartGuide.setAttribute('x1', 410);
+        chartGuide.setAttribute('x2', 410);
+        chartPoint.setAttribute('cx', 410);
+        chartPoint.setAttribute('cy', 40);
+        chartTooltip.style.left = '64%';
+        chartTooltip.innerHTML = `
+          <span class="text-emerald-300 text-[9px] uppercase font-semibold">Oct 2026</span>
+          <span class="text-xs">$37,964</span>
+        `;
+      });
+    }
+  </script>
+</body>
+</html>

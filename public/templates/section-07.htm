@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contact Column - Bramlow</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+  body, html { margin:0; padding:0; background:#06080e; color:#fff; font-family:'Plus Jakarta Sans',sans-serif; overflow:hidden; }
+  .dot-matrix { background-image: radial-gradient(rgba(255,255,255,0.18) 1px, transparent 1px); background-size: 20px 20px; }
+  .nebula-glow { filter: blur(55px); animation: pulseNebula 7s ease-in-out infinite alternate; }
+  @keyframes pulseNebula {
+    0% { transform: scale(0.9) rotate(0deg); opacity: 0.6; }
+    100% { transform: scale(1.15) rotate(45deg); opacity: 0.95; }
+  }
+</style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-6 sm:p-14 relative">
+  <!-- Deep Blue Ambient Halo -->
+  <div class="absolute -top-32 -left-20 w-[600px] h-[500px] bg-blue-600/18 rounded-full blur-[140px] pointer-events-none"></div>
+
+  <div class="relative z-10 max-w-6xl w-full mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+    <!-- Left Column: Big Headline & Dot Matrix -->
+    <div class="space-y-8">
+      <div>
+        <h1 class="text-5xl sm:text-7xl font-extrabold tracking-tight text-white leading-none">
+          Say<br/>hello.
+        </h1>
+      </div>
+
+      <div class="w-full max-w-md h-36 dot-matrix opacity-70 border-t border-b border-white/[0.06]"></div>
+
+      <div>
+        <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-neutral-500">
+          Tell us what<br/><span class="text-neutral-400">you're making.</span>
+        </h2>
+      </div>
+    </div>
+
+    <!-- Right Column: Contact Details & 3D Glowing Nebula Orb -->
+    <div class="relative flex flex-col justify-between space-y-10 pl-0 md:pl-8">
+      <!-- 3D Morphing Nebula Glow Layer Behind Details -->
+      <div class="absolute right-0 top-1/2 -translate-y-1/2 w-72 h-72 rounded-full bg-gradient-to-tr from-emerald-500 via-rose-600 to-indigo-600 nebula-glow pointer-events-none -z-10"></div>
+
+      <div class="space-y-7 text-sm">
+        <a href="mailto:studio@bramlow.uk" class="group flex items-start gap-4 transition">
+          <div class="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-neutral-400 group-hover:text-white transition">✉</div>
+          <div>
+            <span class="font-bold text-white text-base block group-hover:text-blue-400 transition">Mail</span>
+            <span class="text-xs text-neutral-400 font-mono mt-0.5 block">studio@bramlow.uk</span>
+          </div>
+        </a>
+
+        <a href="tel:+447700118260" class="group flex items-start gap-4 transition">
+          <div class="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-neutral-400 group-hover:text-white transition">📞</div>
+          <div>
+            <span class="font-bold text-white text-base block group-hover:text-blue-400 transition">Phone</span>
+            <span class="text-xs text-neutral-400 font-mono mt-0.5 block">+44 7700 118 260</span>
+          </div>
+        </a>
+
+        <div class="flex items-start gap-4">
+          <div class="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-neutral-400">📍</div>
+          <div>
+            <span class="font-bold text-white text-base block">Studio</span>
+            <span class="text-xs text-neutral-400 leading-relaxed mt-0.5 block">London<br/>Unit 4, Colville Yard, London, E2 7DP</span>
+          </div>
+        </div>
+
+        <div>
+          <span class="font-bold text-white text-base block mb-3 flex items-center gap-2">👍 Follow Us</span>
+          <div class="flex gap-2.5">
+            <a href="#" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white hover:text-black flex items-center justify-center text-xs font-bold transition">in</a>
+            <a href="#" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white hover:text-black flex items-center justify-center text-xs font-bold transition">X</a>
+            <a href="#" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white hover:text-black flex items-center justify-center text-xs font-bold transition">✉</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Dynamic Compass Compass Hash Grid -->
+      <div class="grid grid-cols-8 gap-3 pt-6 border-t border-white/[0.08] text-[11px] text-neutral-600 font-mono select-none">
+        <span>/</span><span>—</span><span>\</span><span>|</span><span>/</span><span>—</span><span>\</span><span>|</span>
+        <span>\</span><span>|</span><span>/</span><span>—</span><span>\</span><span>|</span><span>/</span><span>—</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

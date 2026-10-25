@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pricing Plans</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  body, html { margin:0; padding:0; background:#050507; color:#fff; font-family:'Plus Jakarta Sans',sans-serif; overflow-x:hidden; }
+  .price-card { background: linear-gradient(170deg, rgba(20,22,30,0.85) 0%, rgba(10,11,16,0.95) 100%); border: 1px solid rgba(255,255,255,0.08); transition: all 0.3s cubic-bezier(0.2,0.8,0.2,1); }
+  .price-card:hover { transform: translateY(-5px); border-color: rgba(52,211,153,0.4); box-shadow: 0 0 35px rgba(16,185,129,0.15); }
+  .featured-card { background: linear-gradient(170deg, rgba(16,185,129,0.12) 0%, rgba(10,18,14,0.95) 100%); border: 1px solid rgba(52,211,153,0.5); box-shadow: 0 0 45px rgba(16,185,129,0.2); }
+</style>
+</head>
+<body class="min-h-screen flex flex-col justify-center py-16 px-4 sm:px-8 relative">
+  <!-- Glowing Background Halos -->
+  <div class="absolute top-10 left-1/2 -translate-x-1/2 w-[700px] h-[340px] bg-emerald-500/12 rounded-full blur-[140px] pointer-events-none"></div>
+
+  <div class="relative z-10 max-w-7xl w-full mx-auto">
+    <!-- Header -->
+    <div class="text-center max-w-2xl mx-auto mb-12">
+      <span class="text-[11px] font-mono tracking-widest text-emerald-400 uppercase px-3 py-1 rounded-full bg-emerald-950/60 border border-emerald-500/20">
+        TRANSPARENT PRICING
+      </span>
+      <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mt-4">
+        Ready-to-Use 3D & WebGL Vault
+      </h1>
+      <p class="text-xs sm:text-sm text-neutral-400 mt-2.5 leading-relaxed">
+        Spline aur WebGL components ko bina subscription ke direct apni website me use karein.
+      </p>
+
+      <!-- Monthly / Yearly Billing Toggle -->
+      <div class="mt-8 inline-flex items-center p-1 rounded-full bg-neutral-900 border border-white/10">
+        <button id="monthlyBtn" onclick="setBilling('monthly')" class="px-5 py-1.5 rounded-full text-xs font-semibold bg-white text-black transition">
+          Monthly / Standard
+        </button>
+        <button id="yearlyBtn" onclick="setBilling('yearly')" class="px-5 py-1.5 rounded-full text-xs font-semibold text-neutral-400 hover:text-white transition flex items-center gap-1.5">
+          <span>Yearly Pass</span>
+          <span class="text-[9px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-1.5 py-0.5 rounded-full">Save 20%</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Pricing 5-Column Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-5 items-stretch">
+      
+      <!-- Tier 0: Free -->
+      <div class="price-card rounded-3xl p-5 flex flex-col justify-between">
+        <div>
+          <span class="text-[11px] font-mono text-neutral-400 uppercase">Observer</span>
+          <h3 class="text-lg font-bold text-white mt-1">Free View</h3>
+          <p class="text-[11px] text-neutral-400 mt-1">Sirf dekhne aur test karne ke liye.</p>
+          <div class="my-5">
+            <span class="text-3xl font-extrabold text-white">$0</span>
+            <span class="text-xs text-neutral-500"> / forever</span>
+          </div>
+          <ul class="text-xs space-y-2.5 text-neutral-300">
+            <li class="flex items-center gap-2">✓ Full interactive preview</li>
+            <li class="flex items-center gap-2">✓ 60 FPS sandbox testing</li>
+            <li class="flex items-center gap-2 text-neutral-500">✕ No source code access</li>
+            <li class="flex items-center gap-2 text-neutral-500">✕ No AI/Spline prompts</li>
+          </ul>
+        </div>
+        <button class="w-full mt-6 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs font-semibold text-neutral-300 hover:bg-white/10 transition">
+          Explore Free
+        </button>
+      </div>
+
+      <!-- Tier 1: Normal ($2) -->
+      <div class="price-card rounded-3xl p-5 flex flex-col justify-between">
+        <div>
+          <span class="text-[11px] font-mono text-neutral-400 uppercase">Starter</span>
+          <h3 class="text-lg font-bold text-white mt-1">Normal</h3>
+          <p class="text-[11px] text-neutral-400 mt-1">11 din ki limited access.</p>
+          <div class="my-5">
+            <span class="text-3xl font-extrabold text-white price-val" data-m="2" data-y="1.6">$2</span>
+            <span class="text-xs text-neutral-500"> / 11 days</span>
+          </div>
+          <ul class="text-xs space-y-2.5 text-neutral-300">
+            <li class="flex items-center gap-2">✓ 11 Din ki access</li>
+            <li class="flex items-center gap-2">✓ Selected core 3D models</li>
+            <li class="flex items-center gap-2">✓ Ready HTML & CSS code</li>
+            <li class="flex items-center gap-2 text-neutral-500">✕ Limited templates only</li>
+          </ul>
+        </div>
+        <button class="w-full mt-6 py-2.5 rounded-xl bg-white/10 border border-white/20 text-xs font-semibold text-white hover:bg-white/20 transition">
+          Get Normal
+        </button>
+      </div>
+
+      <!-- Tier 2: Standard ($5) -->
+      <div class="price-card rounded-3xl p-5 flex flex-col justify-between">
+        <div>
+          <span class="text-[11px] font-mono text-neutral-400 uppercase">Growth</span>
+          <h3 class="text-lg font-bold text-white mt-1">Standard</h3>
+          <p class="text-[11px] text-neutral-400 mt-1">25 din ki extended access.</p>
+          <div class="my-5">
+            <span class="text-3xl font-extrabold text-white price-val" data-m="5" data-y="4">$5</span>
+            <span class="text-xs text-neutral-500"> / 25 days</span>
+          </div>
+          <ul class="text-xs space-y-2.5 text-neutral-300">
+            <li class="flex items-center gap-2">✓ 25 Din ki access</li>
+            <li class="flex items-center gap-2">✓ Normal se zyada templates</li>
+            <li class="flex items-center gap-2">✓ Code + AI Prompts</li>
+            <li class="flex items-center gap-2">✓ Email support</li>
+          </ul>
+        </div>
+        <button class="w-full mt-6 py-2.5 rounded-xl bg-white/10 border border-white/20 text-xs font-semibold text-white hover:bg-white/20 transition">
+          Get Standard
+        </button>
+      </div>
+
+      <!-- Tier 3: Premium ($10) -->
+      <div class="price-card rounded-3xl p-5 flex flex-col justify-between">
+        <div>
+          <span class="text-[11px] font-mono text-emerald-400 uppercase font-semibold">Pro Choice</span>
+          <h3 class="text-lg font-bold text-white mt-1">Premium</h3>
+          <p class="text-[11px] text-neutral-400 mt-1">3 mahine (90 din) tak unlimited.</p>
+          <div class="my-5">
+            <span class="text-3xl font-extrabold text-emerald-400 price-val" data-m="10" data-y="8">$10</span>
+            <span class="text-xs text-neutral-500"> / 3 months</span>
+          </div>
+          <ul class="text-xs space-y-2.5 text-neutral-300">
+            <li class="flex items-center gap-2">✓ 3 Mahine (90 din) validity</li>
+            <li class="flex items-center gap-2">✓ Complete unlimited library</li>
+            <li class="flex items-center gap-2">✓ Full Three.js code + Prompts</li>
+            <li class="flex items-center gap-2">✓ Commercial use allowed</li>
+          </ul>
+        </div>
+        <button class="w-full mt-6 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-bold transition shadow-[0_0_20px_rgba(16,185,129,0.3)]">
+          Get Premium
+        </button>
+      </div>
+
+      <!-- Tier 4: Lifetime ($13) - Featured Highlight -->
+      <div class="price-card featured-card rounded-3xl p-5 flex flex-col justify-between relative overflow-hidden">
+        <div class="absolute top-3 right-3 bg-emerald-400 text-black font-extrabold text-[9px] px-2 py-0.5 rounded-full tracking-wider uppercase">
+          BEST VALUE
+        </div>
+        <div>
+          <span class="text-[11px] font-mono text-emerald-300 uppercase font-semibold">Ultimate</span>
+          <h3 class="text-lg font-bold text-white mt-1">Lifetime Pass</h3>
+          <p class="text-[11px] text-neutral-400 mt-1">Hamesha ke liye sab kuch unlock.</p>
+          <div class="my-5">
+            <span class="text-3xl font-extrabold text-white price-val" data-m="13" data-y="13">$13</span>
+            <span class="text-xs text-neutral-400"> / one-time</span>
+          </div>
+          <ul class="text-xs space-y-2.5 text-neutral-200">
+            <li class="flex items-center gap-2 font-medium text-emerald-300">✓ Lifetime unlimited access</li>
+            <li class="flex items-center gap-2">✓ Saare Shaders, Sections & Spline</li>
+            <li class="flex items-center gap-2">✓ Sabhi future templates free</li>
+            <li class="flex items-center gap-2">✓ Copy 1-Click Code & Prompts</li>
+            <li class="flex items-center gap-2">✓ Personal & Client Projects</li>
+          </ul>
+        </div>
+        <button class="w-full mt-6 py-2.5 rounded-xl bg-white hover:bg-neutral-200 text-black text-xs font-extrabold transition shadow-lg">
+          Unlock Lifetime ($13)
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    function setBilling(type) {
+      var mBtn = document.getElementById('monthlyBtn');
+      var yBtn = document.getElementById('yearlyBtn');
+      var prices = document.querySelectorAll('.price-val');
+      
+      if(type === 'yearly') {
+        mBtn.className = "px-5 py-1.5 rounded-full text-xs font-semibold text-neutral-400 hover:text-white transition";
+        yBtn.className = "px-5 py-1.5 rounded-full text-xs font-semibold bg-white text-black transition flex items-center gap-1.5 shadow-sm";
+        prices.forEach(function(el){ el.textContent = '$' + el.getAttribute('data-y'); });
+      } else {
+        mBtn.className = "px-5 py-1.5 rounded-full text-xs font-semibold bg-white text-black transition shadow-sm";
+        yBtn.className = "px-5 py-1.5 rounded-full text-xs font-semibold text-neutral-400 hover:text-white transition flex items-center gap-1.5";
+        prices.forEach(function(el){ el.textContent = '$' + el.getAttribute('data-m'); });
+      }
+    }
+  </script>
+</body>
+</html>

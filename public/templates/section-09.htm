@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Book a Route - Safari & Travel Contact</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+  body, html { margin:0; padding:0; background:#f4f4f4; color:#18181b; font-family:'Plus Jakarta Sans',sans-serif; overflow-x:hidden; }
+  .card-3d { transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); transform-style: preserve-3d; }
+  .card-3d:hover { transform: perspective(1000px) rotateY(-6deg) rotateX(4deg) scale(1.02); }
+</style>
+</head>
+<body class="min-h-screen flex flex-col justify-center p-6 sm:p-12">
+  <div class="max-w-6xl w-full mx-auto bg-white rounded-3xl p-6 sm:p-12 shadow-xl border border-neutral-200">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+      <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-neutral-900">
+        Book a Route
+      </h1>
+      <p class="text-xs sm:text-sm text-neutral-500 max-w-sm text-left md:text-right">
+        Tell us the dates and the route you have in mind and we'll come back with availability the same day.
+      </p>
+    </div>
+
+    <!-- Main Grid: Form Left, 3D Destination Card Right -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <form onsubmit="event.preventDefault(); alert('Booking Inquiry Submitted!');" class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="text-[11px] font-semibold text-neutral-600 block mb-1">Name</label>
+          <input type="text" required placeholder="Your full name" class="w-full bg-neutral-100 border border-neutral-200 rounded-xl px-3.5 py-2.5 text-xs text-neutral-900 focus:outline-none focus:border-black" />
+        </div>
+        <div>
+          <label class="text-[11px] font-semibold text-neutral-600 block mb-1">Email</label>
+          <input type="email" required placeholder="you@example.com" class="w-full bg-neutral-100 border border-neutral-200 rounded-xl px-3.5 py-2.5 text-xs text-neutral-900 focus:outline-none focus:border-black" />
+        </div>
+        <div>
+          <label class="text-[11px] font-semibold text-neutral-600 block mb-1">Phone Number</label>
+          <input type="text" placeholder="+966 55 123 4567" class="w-full bg-neutral-100 border border-neutral-200 rounded-xl px-3.5 py-2.5 text-xs text-neutral-900 focus:outline-none focus:border-black" />
+        </div>
+        <div>
+          <label class="text-[11px] font-semibold text-neutral-600 block mb-1">Pick a Route</label>
+          <select class="w-full bg-neutral-100 border border-neutral-200 rounded-xl px-3.5 py-2.5 text-xs text-neutral-900 focus:outline-none focus:border-black">
+            <option>AlUla Canyon Valley Expedition</option>
+            <option>Red Sea Coastal Trail</option>
+            <option>Desert Dunes Stargaze Track</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-[11px] font-semibold text-neutral-600 block mb-1">Start Date</label>
+          <input type="date" class="w-full bg-neutral-100 border border-neutral-200 rounded-xl px-3.5 py-2.5 text-xs text-neutral-900 focus:outline-none focus:border-black" />
+        </div>
+        <div>
+          <label class="text-[11px] font-semibold text-neutral-600 block mb-1">How Many Going</label>
+          <input type="text" placeholder="4 adults" class="w-full bg-neutral-100 border border-neutral-200 rounded-xl px-3.5 py-2.5 text-xs text-neutral-900 focus:outline-none focus:border-black" />
+        </div>
+        <div class="sm:col-span-2">
+          <label class="text-[11px] font-semibold text-neutral-600 block mb-1">Anything We Should Know</label>
+          <textarea rows="3" placeholder="Group size, pace, anything we should plan around" class="w-full bg-neutral-100 border border-neutral-200 rounded-xl px-3.5 py-2.5 text-xs text-neutral-900 focus:outline-none focus:border-black resize-none"></textarea>
+        </div>
+        <div class="sm:col-span-2 pt-2">
+          <button type="submit" class="px-7 py-3 rounded-full bg-black hover:bg-neutral-800 text-white font-bold text-xs flex items-center gap-2 transition duration-200">
+            <span>Check Availability</span> <span>↗</span>
+          </button>
+        </div>
+      </form>
+
+      <!-- Right 3D Perspective Photo Card -->
+      <div class="lg:col-span-5 card-3d relative rounded-3xl overflow-hidden shadow-2xl h-[380px] bg-neutral-900">
+        <img src="https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=800&q=80" alt="Journey Road" class="w-full h-full object-cover" />
+        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+        <span class="absolute top-4 right-4 px-3.5 py-1 rounded-full bg-black/40 backdrop-blur-md border border-white/20 text-white text-[11px] font-medium">Your Journey</span>
+      </div>
+    </div>
+
+    <!-- Bottom Mini Contact Strip -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-10 mt-10 border-t border-neutral-200 text-xs">
+      <div>
+        <span class="text-neutral-400 block mb-1">✉ Write to Us</span>
+        <span class="font-bold text-neutral-800">hello@qadura.co</span>
+      </div>
+      <div>
+        <span class="text-neutral-400 block mb-1">📞 Call or Message</span>
+        <span class="font-bold text-neutral-800">+966 55 240 1180</span>
+      </div>
+      <div>
+        <span class="text-neutral-400 block mb-1">🕒 When We Run</span>
+        <span class="font-bold text-neutral-800">Sat-Thu: 7am-6pm (Friday rest)</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workspace Hub — 3D Premium Dashboard</title>
+
+  <!-- Tailwind CSS & Google Fonts -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            brandOrange: {
+              400: '#FB923C',
+              500: '#F97316',
+              600: '#EA580C',
+            },
+            deepPurple: '#130B24',
+            deepNavy: '#0A1128',
+            deepCrimson: '#200713',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      user-select: none;
+    }
+
+    body {
+      /* Deep Dark Red, Dark Blue, and Dark Purple Cosmic Gradient Mesh */
+      background-color: #060713;
+      background-image: 
+        radial-gradient(circle at 12% 18%, rgba(185, 28, 28, 0.22) 0%, transparent 45%),
+        radial-gradient(circle at 85% 15%, rgba(67, 56, 202, 0.28) 0%, transparent 50%),
+        radial-gradient(circle at 50% 85%, rgba(126, 34, 206, 0.24) 0%, transparent 55%),
+        radial-gradient(circle at 50% 35%, rgba(15, 23, 42, 0.95) 0%, #060713 100%);
+      background-attachment: fixed;
+      color: #F8FAFC;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Ambient atmospheric background blur spheres */
+    .glow-orb-crimson {
+      position: fixed;
+      top: -100px;
+      left: 10%;
+      width: 480px;
+      height: 480px;
+      background: radial-gradient(circle, rgba(225, 29, 72, 0.18) 0%, transparent 70%);
+      filter: blur(90px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .glow-orb-indigo {
+      position: fixed;
+      top: 25%;
+      right: 5%;
+      width: 520px;
+      height: 520px;
+      background: radial-gradient(circle, rgba(79, 70, 229, 0.2) 0%, transparent 70%);
+      filter: blur(100px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .glow-orb-purple {
+      position: fixed;
+      bottom: -120px;
+      left: 35%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(147, 51, 234, 0.18) 0%, transparent 70%);
+      filter: blur(95px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Ultra-luxurious Dark Glass Cards */
+    .hub-card {
+      position: relative;
+      border-radius: 20px;
+      background: rgba(15, 17, 30, 0.65);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 16px 36px -12px rgba(0, 0, 0, 0.55), 
+                  inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      transition: transform 0.22s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+      will-change: transform;
+      overflow: hidden;
+    }
+
+    .hub-card:hover {
+      border-color: rgba(255, 255, 255, 0.22);
+      box-shadow: 0 20px 42px -10px rgba(0, 0, 0, 0.7), 
+                  0 0 24px rgba(126, 34, 206, 0.22),
+                  inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    }
+
+    /* Dynamic Cursor Spotlight Radial Glow */
+    .hub-card::before {
+      content: '';
+      position: absolute;
+      top: var(--mouse-y, -300px);
+      left: var(--mouse-x, -300px);
+      width: 280px;
+      height: 280px;
+      background: radial-gradient(circle closest-side, rgba(234, 88, 12, 0.15), rgba(147, 51, 234, 0.12), transparent 75%);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      border-radius: 9999px;
+      z-index: 10;
+    }
+
+    .hub-card:hover::before {
+      opacity: 1;
+    }
+
+    /* Vibrant Orange 3D Quote Card */
+    .orange-accent-card {
+      background: linear-gradient(145deg, #FF6929 0%, #EA580C 55%, #C2410C 100%);
+      box-shadow: 0 20px 40px -10px rgba(234, 88, 12, 0.45), 
+                  inset 0 1px 1px rgba(255, 255, 255, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    /* Striped SVG and Canvas Texture */
+    .striped-pattern {
+      background: repeating-linear-gradient(
+        -45deg,
+        rgba(255, 255, 255, 0.05),
+        rgba(255, 255, 255, 0.05) 3px,
+        transparent 3px,
+        transparent 7px
+      );
+    }
+
+    /* Section Routing Animations */
+    .section-view {
+      display: none;
+      animation: tabFadeIn 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .section-view.active-view {
+      display: block;
+    }
+
+    @keyframes tabFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.995);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+
+<body class="p-2 sm:p-4 md:p-6 flex items-center justify-center relative">
+
+  <!-- Atmospheric Ambient Glows -->
+  <div class="glow-orb-crimson"></div>
+  <div class="glow-orb-indigo"></div>
+  <div class="glow-orb-purple"></div>
+
+  <!-- Master Dashboard Window Container -->
+  <div class="w-full max-w-[1380px] bg-[#0B0D1A]/85 backdrop-blur-2xl rounded-[30px] border border-white/10 shadow-[0_30px_90px_rgba(0,0,0,0.85)] overflow-hidden flex flex-col relative z-10 min-h-[760px]">
+
+    <!-- TOP CONTROL BAR: Logo Badge, Pill Navigation Tabs, Quick Actions -->
+    <div class="px-5 sm:px-7 pt-5 pb-4 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/[0.08]">
+      
+      <!-- Left: DASHBOARD pill badge -->
+      <div class="flex items-center gap-3">
+        <div class="bg-white/10 hover:bg-white/15 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/15 flex items-center gap-2 transition-all">
+          <div class="w-2.5 h-2.5 rounded-full bg-brandOrange-500 shadow-[0_0_8px_#F97316]"></div>
+          <span class="text-xs font-black tracking-widest uppercase text-white font-mono">DASHBOARD</span>
+        </div>
+      </div>
+
+      <!-- Center: Responsive Pill Navigation Bar -->
+      <nav class="flex items-center gap-1 bg-[#121526]/90 p-1.5 rounded-full border border-white/10 shadow-inner self-center md:self-auto overflow-x-auto no-scrollbar">
+        <button onclick="switchTab('dashboard')" id="nav-tab-dashboard" class="nav-pill active-pill px-4 py-1.5 rounded-full text-xs font-bold transition-all bg-white text-slate-900 shadow-md">Dashboard</button>
+        <button onclick="switchTab('projects')" id="nav-tab-projects" class="nav-pill px-4 py-1.5 rounded-full text-xs font-semibold text-slate-400 hover:text-white transition-all">Projects</button>
+        <button onclick="switchTab('clients')" id="nav-tab-clients" class="nav-pill px-4 py-1.5 rounded-full text-xs font-semibold text-slate-400 hover:text-white transition-all">Clients</button>
+        <button onclick="switchTab('quotes')" id="nav-tab-quotes" class="nav-pill px-4 py-1.5 rounded-full text-xs font-semibold text-slate-400 hover:text-white transition-all">Quotes</button>
+        <button onclick="switchTab('schedule')" id="nav-tab-schedule" class="nav-pill px-4 py-1.5 rounded-full text-xs font-semibold text-slate-400 hover:text-white transition-all">Schedule</button>
+        <button onclick="switchTab('notes')" id="nav-tab-notes" class="nav-pill px-4 py-1.5 rounded-full text-xs font-semibold text-slate-400 hover:text-white transition-all">Notes</button>
+      </nav>
+
+      <!-- Right: Notification counter, help & dismiss icons -->
+      <div class="flex items-center gap-2.5 self-end md:self-auto">
+        <button class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-slate-300 relative text-xs font-bold transition-all" title="Notifications">
+          <span>0</span>
+          <span class="w-2 h-2 rounded-full bg-brandOrange-500 absolute -top-0.5 -right-0.5 ring-2 ring-[#0B0D1A]"></span>
+        </button>
+
+        <button class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-slate-400 hover:text-white transition-all text-xs" title="Settings">
+          ✕
+        </button>
+
+        <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-brandOrange-500 via-rose-500 to-indigo-600 p-0.5 shadow-lg flex items-center justify-center cursor-pointer active:scale-95 transition-transform" title="User Profile">
+          <div class="w-full h-full bg-[#121526] rounded-full flex items-center justify-center text-white text-[11px] font-black">
+            WH
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- MAIN BODY AREA -->
+    <div class="p-4 sm:p-6 lg:p-7 flex-1 overflow-y-auto no-scrollbar">
+
+      <!-- ================= SECTION 1: DASHBOARD ================= -->
+      <div id="view-dashboard" class="section-view active-view">
+        
+        <!-- HEADER ROW: Search input + Top Right KPI Counters -->
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5 pb-6">
+          
+          <!-- Oversized interactive search bar matching design -->
+          <div class="relative flex-1 max-w-xl">
+            <input 
+              type="text" 
+              placeholder="Search something..." 
+              id="dashSearchInput"
+              class="w-full bg-white/[0.04] hover:bg-white/[0.07] focus:bg-white/[0.09] text-white placeholder-slate-400 text-lg sm:text-xl font-medium tracking-tight rounded-2xl pl-5 pr-14 py-3.5 border border-white/10 focus:border-brandOrange-500/60 focus:outline-none transition-all duration-200 shadow-inner"
+            >
+            <button class="w-9 h-9 rounded-xl bg-white/10 hover:bg-brandOrange-500 text-white flex items-center justify-center absolute right-3 top-3 transition-colors active:scale-95">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Top-Right 3 Key Metric Stats -->
+          <div class="flex items-center gap-6 sm:gap-8 self-end lg:self-auto">
+            
+            <!-- 1. Project deals -->
+            <div class="flex flex-col">
+              <span class="text-[11px] font-medium text-slate-400">Project deals</span>
+              <div class="flex items-baseline gap-2 mt-0.5">
+                <span class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">1,368</span>
+                <span class="text-[10px] font-bold text-emerald-400 bg-emerald-950/60 border border-emerald-500/30 px-1.5 py-0.5 rounded-full">+15%</span>
+              </div>
+            </div>
+
+            <!-- 2. Active clients -->
+            <div class="flex flex-col">
+              <span class="text-[11px] font-medium text-slate-400">Active clients</span>
+              <div class="flex items-baseline gap-2 mt-0.5">
+                <span class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">593</span>
+                <span class="text-[10px] font-bold text-rose-400 bg-rose-950/60 border border-rose-500/30 px-1.5 py-0.5 rounded-full">-4%</span>
+              </div>
+            </div>
+
+            <!-- 3. Quotes sent -->
+            <div class="flex flex-col">
+              <span class="text-[11px] font-medium text-slate-400">Quotes sent</span>
+              <div class="flex items-baseline gap-2 mt-0.5">
+                <span class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">960</span>
+                <span class="text-[10px] font-bold text-emerald-400 bg-emerald-950/60 border border-emerald-500/30 px-1.5 py-0.5 rounded-full">+12%</span>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- TOP BENTO ROW (4 Cards) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 items-stretch mb-5">
+          
+          <!-- CARD 1: Integration Health (4 cols) -->
+          <div class="lg:col-span-4 hub-card p-4 sm:p-5 flex flex-col justify-between">
+            <div class="flex items-center justify-between pb-1">
+              <h3 class="text-xs font-bold text-slate-300">Integration health</h3>
+              <button class="w-6 h-6 rounded-full bg-white/5 hover:bg-white/15 text-slate-400 hover:text-white flex items-center justify-center text-xs transition-colors">+</button>
+            </div>
+
+            <!-- Speed Dial Needle Arc & 368 ms -->
+            <div class="flex items-center justify-between my-2">
+              <div>
+                <span class="text-[10px] font-medium text-slate-400">Avg response</span>
+                <div class="flex items-baseline gap-2">
+                  <span class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">368</span>
+                  <span class="text-[10px] font-bold text-emerald-400 bg-emerald-500/15 border border-emerald-500/30 px-1.5 py-0.5 rounded">Fast</span>
+                </div>
+                <span class="text-[10px] text-slate-500 font-mono">milliseconds</span>
+              </div>
+
+              <!-- Speedometer Arc with Needle Indicator -->
+              <div class="relative w-28 h-16 flex items-end justify-center">
+                <svg class="w-28 h-28 -rotate-180" viewBox="0 0 100 100">
+                  <!-- Arc Background -->
+                  <circle cx="50" cy="50" r="38" fill="transparent" stroke="rgba(255,255,255,0.1)" stroke-width="8" stroke-dasharray="119.38 238.76" stroke-dashoffset="0"/>
+                  <!-- Warm Orange Active Performance Arc -->
+                  <circle cx="50" cy="50" r="38" fill="transparent" stroke="#F97316" stroke-width="8" stroke-dasharray="88 238.76" stroke-dashoffset="0" stroke-linecap="round"/>
+                </svg>
+                <!-- Needle Dial -->
+                <div class="absolute bottom-1 w-1.5 h-10 bg-gradient-to-t from-white to-orange-400 rounded-full origin-bottom rotate-45 shadow-[0_0_8px_#F97316]"></div>
+                <div class="absolute bottom-0 w-3 h-3 bg-white rounded-full ring-2 ring-orange-500"></div>
+              </div>
+            </div>
+
+            <!-- Integrated Apps Pill Dock -->
+            <div class="flex items-center justify-between pt-2 border-t border-white/5">
+              <div class="flex items-center -space-x-1.5">
+                <span class="w-6 h-6 rounded-full bg-emerald-500/30 border border-emerald-400/50 flex items-center justify-center text-[9px] font-bold text-emerald-300">●</span>
+                <span class="w-6 h-6 rounded-full bg-blue-500/30 border border-blue-400/50 flex items-center justify-center text-[9px] font-bold text-blue-300">●</span>
+                <span class="w-6 h-6 rounded-full bg-purple-500/30 border border-purple-400/50 flex items-center justify-center text-[9px] font-bold text-purple-300">●</span>
+              </div>
+
+              <div class="flex items-center gap-2 bg-white/5 hover:bg-white/10 px-2.5 py-1 rounded-full border border-white/10 text-[10px] text-slate-300 cursor-pointer transition-colors">
+                <span class="text-brandOrange-400 font-bold">+</span>
+                <span>Workspace app</span>
+                <span class="w-4 h-4 rounded-full bg-white/10 flex items-center justify-center text-[9px]">→</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- CARD 2: Manage Quotes Vibrant Orange Card (2.5 cols) -->
+          <div class="lg:col-span-3 hub-card orange-accent-card p-5 flex flex-col justify-between text-white relative">
+            <div class="flex items-start justify-between">
+              <div>
+                <h3 class="text-sm font-extrabold text-white leading-tight">Manage<br>quotes</h3>
+              </div>
+              <button class="w-7 h-7 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-md flex items-center justify-center text-xs transition-transform active:scale-95">
+                ↗
+              </button>
+            </div>
+
+            <div class="my-4">
+              <button onclick="openModal('quoteModal')" class="bg-black/85 hover:bg-black text-white text-xs font-bold px-3.5 py-2 rounded-xl border border-white/20 shadow-md flex items-center gap-1.5 transition-all active:scale-95">
+                <span>+</span>
+                <span>Create new</span>
+              </button>
+            </div>
+
+            <div>
+              <div class="text-3xl sm:text-4xl font-black tracking-tight leading-none">127</div>
+              <p class="text-[10px] text-white/85 font-medium mt-1">averages in a month</p>
+            </div>
+          </div>
+
+          <!-- CARD 3: Meeting Notes Card (2.5 cols) -->
+          <div class="lg:col-span-2 hub-card p-4 flex flex-col justify-between">
+            <div class="flex items-center justify-between pb-1">
+              <h3 class="text-xs font-bold text-slate-300">Meeting notes</h3>
+              <button class="w-6 h-6 rounded-full bg-white/5 hover:bg-white/15 text-slate-400 hover:text-white flex items-center justify-center text-xs transition-colors">+</button>
+            </div>
+
+            <!-- Note Box Pill -->
+            <div class="my-2 p-3 bg-black/40 rounded-xl border border-white/10 flex flex-col justify-between h-28">
+              <div>
+                <span class="text-[9px] font-mono font-bold text-slate-400 bg-white/5 px-1.5 py-0.5 rounded">21 Sept</span>
+                <p class="text-xs font-bold text-slate-200 mt-1.5 leading-snug">Brainstorming the product roadmap</p>
+              </div>
+              <div class="flex items-center gap-1 text-[10px] text-brandOrange-400 font-bold">
+                <span>●</span>
+                <span class="text-slate-400">Discussed</span>
+              </div>
+            </div>
+
+            <button onclick="switchTab('notes')" class="text-[10px] font-bold text-slate-400 hover:text-white text-left transition-colors">View all 14 notes →</button>
+          </div>
+
+          <!-- CARD 4: Clients by Region (3 cols) -->
+          <div class="lg:col-span-3 hub-card p-4 sm:p-5 flex flex-col justify-between">
+            <div class="flex items-center justify-between pb-1">
+              <h3 class="text-xs font-bold text-slate-300">Clients by region</h3>
+              <button class="w-6 h-6 rounded-full bg-white/5 hover:bg-white/15 text-slate-400 hover:text-white flex items-center justify-center text-xs transition-colors">↗</button>
+            </div>
+
+            <!-- Regional World Grid with Glowing Pinpoint -->
+            <div class="relative w-full h-24 my-2 rounded-xl bg-black/30 border border-white/5 overflow-hidden flex items-center justify-center">
+              <!-- Grid lines -->
+              <div class="absolute inset-0 grid grid-cols-6 grid-rows-3 opacity-20">
+                <div class="border-r border-b border-white"></div>
+                <div class="border-r border-b border-white"></div>
+                <div class="border-r border-b border-white"></div>
+                <div class="border-r border-b border-white"></div>
+                <div class="border-r border-b border-white"></div>
+                <div class="border-b border-white"></div>
+                <div class="border-r border-b border-white"></div>
+                <div class="border-r border-b border-white"></div>
+                <div class="border-r border-b border-white"></div>
+                <div class="border-r border-b border-white"></div>
+                <div class="border-r border-b border-white"></div>
+                <div class="border-b border-white"></div>
+              </div>
+
+              <!-- Pinpoint Marker for Region -->
+              <div class="relative z-10 flex flex-col items-center">
+                <span class="w-3 h-3 rounded-full bg-brandOrange-500 shadow-[0_0_12px_#F97316] animate-pulse"></span>
+                <span class="w-6 h-2 rounded-full bg-brandOrange-500/20 blur-sm mt-0.5"></span>
+              </div>
+            </div>
+
+            <!-- Selected Region Bottom Pill -->
+            <div class="flex items-center justify-between bg-white/5 p-2 rounded-xl border border-white/10">
+              <div class="flex items-center gap-2">
+                <div class="w-6 h-6 rounded-md bg-indigo-600/40 border border-indigo-400/40 text-[9px] font-black text-indigo-300 flex items-center justify-center">
+                  UK
+                </div>
+                <div>
+                  <div class="text-xs font-extrabold text-white leading-tight">48</div>
+                  <div class="text-[9px] text-slate-400">United Kingdom</div>
+                </div>
+              </div>
+              <button class="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center text-[10px] text-slate-300 hover:text-white">→</button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- BOTTOM BENTO ROW (2 Large Cards) -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
+          
+          <!-- CARD 5: Project Deals Bar Chart (5 cols) -->
+          <div class="lg:col-span-5 hub-card p-4 sm:p-5 flex flex-col justify-between">
+            <div class="flex items-center justify-between pb-2 border-b border-white/5">
+              <div>
+                <h3 class="text-xs font-bold text-white">Project deals</h3>
+                <span class="text-[10px] text-slate-400">Monthly conversion rate</span>
+              </div>
+
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] font-bold text-slate-300 bg-white/5 border border-white/10 px-2 py-0.5 rounded-md">Last 7 months</span>
+                <button class="w-6 h-6 rounded-full bg-white/5 hover:bg-white/15 text-slate-400 hover:text-white flex items-center justify-center text-xs transition-colors">⭳</button>
+              </div>
+            </div>
+
+            <!-- Textured 7-Month Bar Chart with Highlighted Sep Pillar -->
+            <div class="pt-4 pb-1">
+              <div class="flex items-end justify-between gap-2 h-36 border-b border-white/10 px-2 pb-1 relative">
+                
+                <!-- Jun -->
+                <div class="flex-1 flex flex-col items-center group cursor-pointer h-full justify-end">
+                  <div class="w-full max-w-[28px] h-14 bg-white/10 rounded-t-lg striped-pattern group-hover:bg-white/20 transition-all"></div>
+                  <span class="text-[9px] font-bold text-slate-500 mt-2">Jun</span>
+                </div>
+
+                <!-- Jul -->
+                <div class="flex-1 flex flex-col items-center group cursor-pointer h-full justify-end">
+                  <div class="w-full max-w-[28px] h-20 bg-white/10 rounded-t-lg striped-pattern group-hover:bg-white/20 transition-all"></div>
+                  <span class="text-[9px] font-bold text-slate-500 mt-2">Jul</span>
+                </div>
+
+                <!-- Aug -->
+                <div class="flex-1 flex flex-col items-center group cursor-pointer h-full justify-end">
+                  <div class="w-full max-w-[28px] h-16 bg-white/10 rounded-t-lg striped-pattern group-hover:bg-white/20 transition-all"></div>
+                  <span class="text-[9px] font-bold text-slate-500 mt-2">Aug</span>
+                </div>
+
+                <!-- Sep (ACTIVE HIGHLIGHTED PILLAR - 232 deals) -->
+                <div class="flex-1 flex flex-col items-center group cursor-pointer h-full justify-end relative">
+                  <!-- Floating tooltip badge -->
+                  <div class="absolute -top-3 bg-black/90 text-white text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border border-white/20 shadow-lg whitespace-nowrap">
+                    232
+                  </div>
+                  <div class="w-full max-w-[32px] h-32 bg-gradient-to-t from-brandOrange-600 to-brandOrange-500 rounded-t-xl shadow-[0_0_20px_rgba(249,115,22,0.4)] group-hover:scale-105 transition-all"></div>
+                  <span class="text-[9px] font-black text-brandOrange-400 mt-2">Sep</span>
+                </div>
+
+                <!-- Oct -->
+                <div class="flex-1 flex flex-col items-center group cursor-pointer h-full justify-end">
+                  <div class="w-full max-w-[28px] h-22 bg-white/10 rounded-t-lg striped-pattern group-hover:bg-white/20 transition-all" style="height: 5.5rem;"></div>
+                  <span class="text-[9px] font-bold text-slate-500 mt-2">Oct</span>
+                </div>
+
+                <!-- Nov -->
+                <div class="flex-1 flex flex-col items-center group cursor-pointer h-full justify-end">
+                  <div class="w-full max-w-[28px] h-28 bg-white/10 rounded-t-lg striped-pattern group-hover:bg-white/20 transition-all"></div>
+                  <span class="text-[9px] font-bold text-slate-500 mt-2">Nov</span>
+                </div>
+
+                <!-- Dec -->
+                <div class="flex-1 flex flex-col items-center group cursor-pointer h-full justify-end">
+                  <div class="w-full max-w-[28px] h-20 bg-white/10 rounded-t-lg striped-pattern group-hover:bg-white/20 transition-all"></div>
+                  <span class="text-[9px] font-bold text-slate-500 mt-2">Dec</span>
+                </div>
+
+              </div>
+
+              <!-- Footer summary text -->
+              <div class="flex items-center justify-between text-[10px] text-slate-400 pt-2 px-1">
+                <span>Peak volume: <strong class="text-white">September (+28%)</strong></span>
+                <span class="text-emerald-400 font-semibold">99.4% Fulfillment</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- CARD 6: Meeting Schedule with Today's Standup Floating Overlay (7 cols) -->
+          <div class="lg:col-span-7 hub-card p-4 sm:p-5 flex flex-col justify-between relative">
+            
+            <div class="flex items-center justify-between pb-2 border-b border-white/5">
+              <h3 class="text-xs font-bold text-white">Meeting schedule</h3>
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] font-bold text-slate-300 bg-white/5 border border-white/10 px-2 py-0.5 rounded-md">December</span>
+                <button class="w-6 h-6 rounded-full bg-white/5 hover:bg-white/15 text-slate-400 hover:text-white flex items-center justify-center text-xs transition-colors">−</button>
+              </div>
+            </div>
+
+            <!-- Weekly Days Navigation (Mon 11 to Sun 17) -->
+            <div class="grid grid-cols-7 gap-1 text-center py-2 text-[10px] text-slate-400">
+              <div class="font-bold">Mon 11</div>
+              <div class="font-bold">Tue 12</div>
+              <div class="font-bold bg-white/10 text-white rounded-lg py-0.5 border border-white/10 shadow-sm">Wed 13</div>
+              <div class="font-bold">Thu 14</div>
+              <div class="font-bold">Fri 15</div>
+              <div class="font-bold opacity-60">Sat 16</div>
+              <div class="font-bold opacity-60">Sun 17</div>
+            </div>
+
+            <!-- Calendar Time Slots Timeline -->
+            <div class="space-y-2 py-1 text-xs">
+              
+              <!-- 9 AM Row -->
+              <div class="flex items-center gap-3">
+                <span class="w-10 text-[10px] text-slate-500 font-mono">9 AM</span>
+                <div class="flex-1 grid grid-cols-7 gap-1 h-7">
+                  <div class="bg-brandOrange-500/70 hover:bg-brandOrange-500 rounded-lg cursor-pointer transition-colors shadow-sm" title="Sprint Kickoff"></div>
+                  <div></div>
+                  <div></div>
+                  <div class="bg-brandOrange-500/80 hover:bg-brandOrange-500 rounded-lg cursor-pointer transition-colors shadow-sm" title="Client Alignment"></div>
+                  <div class="bg-white/5 rounded-lg opacity-40"></div>
+                  <div></div>
+                  <div></div>
+                </div>
+              </div>
+
+              <!-- 12 PM Row -->
+              <div class="flex items-center gap-3">
+                <span class="w-10 text-[10px] text-slate-500 font-mono">12 PM</span>
+                <div class="flex-1 grid grid-cols-7 gap-1 h-7">
+                  <div></div>
+                  <div></div>
+                  <div class="bg-brandOrange-500/90 hover:bg-brandOrange-500 rounded-lg cursor-pointer transition-colors shadow-sm" title="Design Sync"></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                </div>
+              </div>
+
+              <!-- 5 PM Row -->
+              <div class="flex items-center gap-3">
+                <span class="w-10 text-[10px] text-slate-500 font-mono">5 PM</span>
+                <div class="flex-1 grid grid-cols-7 gap-1 h-7">
+                  <div></div>
+                  <div class="bg-brandOrange-500/70 hover:bg-brandOrange-500 rounded-lg cursor-pointer transition-colors shadow-sm" title="Product Review"></div>
+                  <div></div>
+                  <div></div>
+                  <div class="bg-brandOrange-500/60 hover:bg-brandOrange-500 rounded-lg cursor-pointer transition-colors shadow-sm" title="Weekly Retrospective"></div>
+                  <div></div>
+                  <div></div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- FLOATING STANDUP CARD WIDGET (Matching Design) -->
+            <div class="mt-2 sm:mt-0 sm:absolute sm:bottom-4 sm:right-4 bg-black/85 backdrop-blur-xl border border-white/15 p-3 rounded-2xl shadow-2xl flex flex-col justify-between w-full sm:w-60 z-20">
+              <div class="flex items-center justify-between pb-1 border-b border-white/10">
+                <span class="text-xs font-bold text-white">Today's standup</span>
+                <button class="text-slate-400 hover:text-white text-xs">✕</button>
+              </div>
+
+              <div class="flex items-center gap-2 my-2">
+                <span class="bg-brandOrange-500/30 text-brandOrange-300 border border-brandOrange-400/40 text-[9px] font-bold px-2 py-0.5 rounded-full">Discussed</span>
+                <span class="text-[10px] text-slate-400 font-mono">9:30 - 10 AM</span>
+              </div>
+
+              <!-- Avatars & Join Button -->
+              <div class="flex items-center justify-between pt-1">
+                <div class="flex items-center -space-x-1.5">
+                  <span class="w-5 h-5 rounded-full bg-indigo-500 text-white text-[8px] font-bold flex items-center justify-center ring-1 ring-black">AK</span>
+                  <span class="w-5 h-5 rounded-full bg-rose-500 text-white text-[8px] font-bold flex items-center justify-center ring-1 ring-black">MR</span>
+                  <span class="w-5 h-5 rounded-full bg-amber-500 text-white text-[8px] font-bold flex items-center justify-center ring-1 ring-black">SJ</span>
+                  <span class="w-5 h-5 rounded-full bg-slate-700 text-white text-[8px] font-bold flex items-center justify-center ring-1 ring-black">+4</span>
+                </div>
+
+                <button onclick="openModal('standupModal')" class="bg-white/10 hover:bg-brandOrange-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg border border-white/20 transition-all flex items-center gap-1 active:scale-95">
+                  <span>Join the call</span>
+                  <span>→</span>
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ================= SECTION 2: PROJECTS ================= -->
+      <div id="view-projects" class="section-view">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xl font-extrabold text-white">Active Projects Directory</h2>
+          <button onclick="switchTab('dashboard')" class="text-xs font-bold text-brandOrange-400 hover:underline">← Back to Dashboard</button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="hub-card p-5 border-l-4 border-brandOrange-500">
+            <span class="text-[10px] font-mono text-brandOrange-400 font-bold uppercase">Engineering</span>
+            <h3 class="text-base font-bold text-white mt-1">NextGen Mobile Banking App</h3>
+            <p class="text-xs text-slate-400 mt-2">78% completed • 4 milestones pending sprint cycle.</p>
+            <div class="mt-4 flex items-center justify-between text-xs">
+              <span class="text-slate-400 font-mono">14 Team Members</span>
+              <span class="text-emerald-400 font-bold">On Schedule</span>
+            </div>
+          </div>
+
+          <div class="hub-card p-5 border-l-4 border-indigo-500">
+            <span class="text-[10px] font-mono text-indigo-400 font-bold uppercase">Design Systems</span>
+            <h3 class="text-base font-bold text-white mt-1">Cosmic UI Kit v3.0</h3>
+            <p class="text-xs text-slate-400 mt-2">Figma components & WebGL shaders production release.</p>
+            <div class="mt-4 flex items-center justify-between text-xs">
+              <span class="text-slate-400 font-mono">6 Contributors</span>
+              <span class="text-indigo-400 font-bold">Review Stage</span>
+            </div>
+          </div>
+
+          <div class="hub-card p-5 border-l-4 border-purple-500">
+            <span class="text-[10px] font-mono text-purple-400 font-bold uppercase">Infrastructure</span>
+            <h3 class="text-base font-bold text-white mt-1">Multi-Cloud Edge Deployment</h3>
+            <p class="text-xs text-slate-400 mt-2">Kubernetes clusters migrating across European nodes.</p>
+            <div class="mt-4 flex items-center justify-between text-xs">
+              <span class="text-slate-400 font-mono">3 SRE Leads</span>
+              <span class="text-amber-400 font-bold">Testing</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= SECTION 3: CLIENTS ================= -->
+      <div id="view-clients" class="section-view">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xl font-extrabold text-white">Client Portfolio & Contracts</h2>
+          <button onclick="switchTab('dashboard')" class="text-xs font-bold text-brandOrange-400 hover:underline">← Back to Dashboard</button>
+        </div>
+
+        <div class="hub-card p-5">
+          <table class="w-full text-left text-xs">
+            <thead>
+              <tr class="text-[10px] font-bold uppercase tracking-wider text-slate-400 border-b border-white/10 pb-2">
+                <th class="pb-3">Client Organization</th>
+                <th class="pb-3">Region</th>
+                <th class="pb-3">Contract Value</th>
+                <th class="pb-3">Engagement Status</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-white/5 text-slate-300">
+              <tr>
+                <td class="py-3 font-bold text-white">Starlight Interactive UK</td>
+                <td class="py-3 text-slate-400">London, United Kingdom</td>
+                <td class="py-3 font-mono font-bold text-brandOrange-400">$148,000</td>
+                <td class="py-3"><span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] px-2 py-0.5 rounded-full font-bold">Active SLA</span></td>
+              </tr>
+              <tr>
+                <td class="py-3 font-bold text-white">Nordic Ventures A/S</td>
+                <td class="py-3 text-slate-400">Stockholm, Sweden</td>
+                <td class="py-3 font-mono font-bold text-brandOrange-400">$92,500</td>
+                <td class="py-3"><span class="bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 text-[10px] px-2 py-0.5 rounded-full font-bold">In Production</span></td>
+              </tr>
+              <tr>
+                <td class="py-3 font-bold text-white">Apex FinTech Labs</td>
+                <td class="py-3 text-slate-400">San Francisco, USA</td>
+                <td class="py-3 font-mono font-bold text-brandOrange-400">$215,000</td>
+                <td class="py-3"><span class="bg-amber-500/20 text-amber-400 border border-amber-500/30 text-[10px] px-2 py-0.5 rounded-full font-bold">Renewal Due</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ================= SECTION 4: QUOTES ================= -->
+      <div id="view-quotes" class="section-view">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xl font-extrabold text-white">Quotations & Proposals</h2>
+          <button onclick="openModal('quoteModal')" class="bg-brandOrange-500 hover:bg-brandOrange-600 text-white text-xs font-bold px-3 py-1.5 rounded-xl shadow-md transition-all">+ New Proposal</button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="hub-card p-4">
+            <div class="flex justify-between items-start">
+              <div>
+                <span class="text-[10px] font-mono text-slate-400">#QTE-2026-881</span>
+                <h4 class="text-sm font-bold text-white mt-1">Enterprise Design Sprint</h4>
+              </div>
+              <span class="text-base font-black text-brandOrange-400 font-mono">$34,000</span>
+            </div>
+            <p class="text-xs text-slate-400 mt-2">Delivered to Clerxwind Studio on 02 Apr.</p>
+          </div>
+
+          <div class="hub-card p-4">
+            <div class="flex justify-between items-start">
+              <div>
+                <span class="text-[10px] font-mono text-slate-400">#QTE-2026-882</span>
+                <h4 class="text-sm font-bold text-white mt-1">Cloud Architecture Refactor</h4>
+              </div>
+              <span class="text-base font-black text-brandOrange-400 font-mono">$58,000</span>
+            </div>
+            <p class="text-xs text-slate-400 mt-2">Delivered to Ralph Edwards on 28 Mar.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= SECTION 5: SCHEDULE ================= -->
+      <div id="view-schedule" class="section-view">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xl font-extrabold text-white">Calendar & Team Syncs</h2>
+          <button onclick="switchTab('dashboard')" class="text-xs font-bold text-brandOrange-400 hover:underline">← Back to Dashboard</button>
+        </div>
+
+        <div class="hub-card p-5 space-y-3">
+          <div class="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/10">
+            <div>
+              <span class="text-xs font-bold text-white">Product Demo Day</span>
+              <p class="text-[10px] text-slate-400">Tomorrow at 11:00 AM • Zoom Conference</p>
+            </div>
+            <button onclick="openModal('standupModal')" class="bg-white/10 hover:bg-brandOrange-500 text-white text-xs font-bold px-3 py-1 rounded-lg transition-all">Join</button>
+          </div>
+
+          <div class="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/10">
+            <div>
+              <span class="text-xs font-bold text-white">Executive Board Review</span>
+              <p class="text-[10px] text-slate-400">Friday at 4:30 PM • Relibank HQ</p>
+            </div>
+            <span class="text-xs font-mono text-slate-400">Confirmed</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= SECTION 6: NOTES ================= -->
+      <div id="view-notes" class="section-view">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xl font-extrabold text-white">Workspace Meeting Notes</h2>
+          <button onclick="switchTab('dashboard')" class="text-xs font-bold text-brandOrange-400 hover:underline">← Back to Dashboard</button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="hub-card p-4">
+            <span class="text-[9px] font-mono text-brandOrange-400 font-bold">21 Sept 2026</span>
+            <h4 class="text-sm font-bold text-white mt-1">Brainstorming the product roadmap</h4>
+            <p class="text-xs text-slate-300 mt-2 leading-relaxed">Agreed to push 3D WebGL glass features into Q4 sprint. Ensure all latency is kept under 400 milliseconds.</p>
+          </div>
+
+          <div class="hub-card p-4">
+            <span class="text-[9px] font-mono text-indigo-400 font-bold">18 Sept 2026</span>
+            <h4 class="text-sm font-bold text-white mt-1">Client Feedback Summary</h4>
+            <p class="text-xs text-slate-300 mt-2 leading-relaxed">UK region client volume up +15%. Additional node clusters to be spun up in London datacenter.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- MODAL 1: Create New Quote -->
+  <div id="quoteModal" class="fixed inset-0 bg-black/70 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-[#121526] border border-white/15 rounded-3xl max-w-sm w-full p-6 shadow-2xl relative animate-in fade-in zoom-in-95 duration-200">
+      <button onclick="closeModal('quoteModal')" class="w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 flex items-center justify-center absolute top-4 right-4">✕</button>
+      <h3 class="text-base font-extrabold text-white">Create New Quote</h3>
+      <p class="text-xs text-slate-400 mt-1">Generate a commercial estimate with automated invoicing.</p>
+
+      <div class="mt-4 space-y-3">
+        <div>
+          <label class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Client Name</label>
+          <input type="text" placeholder="e.g. Starlight Interactive UK" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-brandOrange-500 mt-1">
+        </div>
+        <div>
+          <label class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Quote Value ($ USD)</label>
+          <input type="number" placeholder="24,500" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm font-mono text-brandOrange-400 font-bold focus:outline-none focus:border-brandOrange-500 mt-1">
+        </div>
+      </div>
+
+      <div class="mt-6 flex justify-end gap-2">
+        <button onclick="closeModal('quoteModal')" class="px-3.5 py-1.5 text-xs text-slate-400 hover:text-white">Cancel</button>
+        <button onclick="closeModal('quoteModal')" class="px-4 py-1.5 bg-brandOrange-500 hover:bg-brandOrange-600 text-white font-bold text-xs rounded-xl shadow-lg active:scale-95 transition-all">Submit Quote</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: Join Standup Call -->
+  <div id="standupModal" class="fixed inset-0 bg-black/70 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-[#121526] border border-white/15 rounded-3xl max-w-sm w-full p-6 shadow-2xl relative text-center">
+      <button onclick="closeModal('standupModal')" class="w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 flex items-center justify-center absolute top-4 right-4">✕</button>
+      
+      <div class="w-12 h-12 rounded-full bg-brandOrange-500/20 border border-brandOrange-500/40 text-brandOrange-400 flex items-center justify-center mx-auto text-xl shadow-[0_0_20px_#F97316]">
+        🎙️
+      </div>
+
+      <h3 class="text-base font-extrabold text-white mt-3">Connecting to Standup...</h3>
+      <p class="text-xs text-slate-400 mt-1">Workspace Hub Daily Sync • Room #409</p>
+
+      <div class="my-4 p-3 bg-white/5 rounded-xl border border-white/10 flex items-center justify-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+        <span class="text-xs font-mono text-emerald-400">Microphone & Video Enabled</span>
+      </div>
+
+      <div class="flex justify-center gap-3">
+        <button onclick="closeModal('standupModal')" class="px-5 py-2 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl transition-all">Leave Call</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 1. Multi-Section Tab Switcher
+    function switchTab(targetId) {
+      const tabs = ['dashboard', 'projects', 'clients', 'quotes', 'schedule', 'notes'];
+
+      tabs.forEach(tab => {
+        const viewEl = document.getElementById(`view-${tab}`);
+        const tabBtn = document.getElementById(`nav-tab-${tab}`);
+
+        if (tab === targetId) {
+          if (viewEl) viewEl.classList.add('active-view');
+          if (tabBtn) {
+            tabBtn.className = 'nav-pill active-pill px-4 py-1.5 rounded-full text-xs font-bold transition-all bg-white text-slate-900 shadow-md';
+          }
+        } else {
+          if (viewEl) viewEl.classList.remove('active-view');
+          if (tabBtn) {
+            tabBtn.className = 'nav-pill px-4 py-1.5 rounded-full text-xs font-semibold text-slate-400 hover:text-white transition-all';
+          }
+        }
+      });
+    }
+
+    // 2. Real-time Dynamic Specular Cursor Glow & 3D Perspective Tilt
+    function initCard3DEffects() {
+      const cards = document.querySelectorAll('.hub-card');
+
+      cards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+
+          card.style.setProperty('--mouse-x', `${x}px`);
+          card.style.setProperty('--mouse-y', `${y}px`);
+
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+          const rotateX = ((y - centerY) / centerY) * -2.5;
+          const rotateY = ((x - centerX) / centerX) * 2.5;
+
+          card.style.transform = `perspective(900px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(-2px)`;
+        });
+
+        card.addEventListener('mouseleave', () => {
+          card.style.transform = `perspective(900px) rotateX(0deg) rotateY(0deg) translateY(0px)`;
+        });
+      });
+    }
+
+    // 3. Modal Controllers
+    function openModal(id) {
+      const modal = document.getElementById(id);
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeModal(id) {
+      const modal = document.getElementById(id);
+      if (modal) modal.classList.add('hidden');
+    }
+
+    // 4. Live Search Filter across Dashboard Elements
+    const searchInput = document.getElementById('dashSearchInput');
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        const val = e.target.value.toLowerCase().trim();
+        const cards = document.querySelectorAll('.hub-card');
+        
+        cards.forEach(card => {
+          if (!val) {
+            card.style.opacity = '1';
+            return;
+          }
+          const text = card.textContent.toLowerCase();
+          card.style.opacity = text.includes(val) ? '1' : '0.35';
+        });
+      });
+    }
+
+    // Initialize once DOM is ready
+    window.addEventListener('load', () => {
+      initCard3DEffects();
+    });
+  </script>
+
+</body>
+</html>

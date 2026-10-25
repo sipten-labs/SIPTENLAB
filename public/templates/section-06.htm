@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portfolio Close - Quenroth Footer</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,600;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+  body, html { margin:0; padding:0; background:#070908; color:#fff; font-family:'Plus Jakarta Sans',sans-serif; overflow-x:hidden; }
+  .watermark { font-size:clamp(5rem, 18vw, 16rem); font-weight:800; letter-spacing:-0.05em; color:transparent; -webkit-text-stroke: 1.5px rgba(255,255,255,0.06); pointer-events:none; user-select:none; }
+</style>
+</head>
+<body class="min-h-screen flex flex-col justify-between p-6 sm:p-14 relative overflow-hidden">
+  <!-- Glowing Bokeh Meadow Canvas in Background -->
+  <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_rgba(125,185,25,0.18)_0%,_rgba(70,110,15,0.08)_40%,_transparent_75%)] pointer-events-none"></div>
+  <div class="absolute -bottom-24 left-1/2 -translate-x-1/2 w-[700px] h-[300px] bg-[#84cc16]/12 rounded-full blur-[140px] pointer-events-none"></div>
+
+  <div class="relative z-10 max-w-6xl w-full mx-auto space-y-16">
+    <!-- Top Action Row -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/10 text-[11px] text-lime-400 font-mono mb-4">
+          <span class="w-1.5 h-1.5 rounded-full bg-lime-400"></span> Plan ahead
+        </div>
+        <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white">
+          Grow What <span class="italic font-normal text-neutral-300">You've Built</span>
+        </h1>
+        <p class="text-xs sm:text-sm text-neutral-400 mt-2">See everything you own in one place, and what it is doing.</p>
+      </div>
+
+      <div class="w-full md:w-auto">
+        <label class="text-[11px] text-neutral-400 font-medium block mb-2">Monthly market notes</label>
+        <form onsubmit="event.preventDefault(); alert('Subscribed to Quenroth Market Notes!');" class="flex gap-2">
+          <input type="email" required placeholder="Your email" class="bg-[#101411] border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-lime-400 w-64" />
+          <button type="submit" class="px-5 py-2.5 rounded-xl bg-[#ccff00] hover:bg-[#b8e600] text-black font-semibold text-xs transition duration-200 shadow-[0_0_20px_rgba(204,255,0,0.3)]">Subscribe</button>
+        </form>
+        <span class="text-[10px] text-neutral-500 mt-2 block">By subscribing you agree to our <a href="#" class="underline hover:text-neutral-300">Privacy Policy</a></span>
+      </div>
+    </div>
+
+    <!-- Navigation Directory Grid -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-8 pt-10 border-t border-white/[0.06] text-xs">
+      <div class="col-span-2 space-y-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-6 h-6 rounded-lg bg-[#ccff00] text-black font-extrabold flex items-center justify-center text-xs">↗</div>
+          <span class="font-bold text-base tracking-tight text-white">Quenroth®</span>
+        </div>
+        <p class="text-[11px] text-neutral-400 max-w-xs leading-relaxed">Portfolio tracking, forecasting and tax planning, in one place.</p>
+      </div>
+
+      <div class="space-y-2.5">
+        <span class="text-neutral-500 font-medium block mb-3">Product</span>
+        <a href="#" class="block text-neutral-300 hover:text-white transition">How it works</a>
+        <a href="#" class="block text-neutral-300 hover:text-white transition">Pricing</a>
+        <a href="#" class="block text-neutral-300 hover:text-white transition">Security</a>
+        <a href="#" class="block text-neutral-300 hover:text-white transition">Mobile app</a>
+      </div>
+
+      <div class="space-y-2.5">
+        <span class="text-neutral-500 font-medium block mb-3">Learn</span>
+        <a href="#" class="block text-neutral-300 hover:text-white transition">Help centre</a>
+        <a href="#" class="block text-neutral-300 hover:text-white transition">Guides</a>
+        <a href="#" class="block text-neutral-300 hover:text-white transition">API access</a>
+        <a href="#" class="block text-neutral-300 hover:text-white transition">Community</a>
+      </div>
+
+      <div class="space-y-2.5">
+        <span class="text-neutral-500 font-medium block mb-3">Company</span>
+        <a href="#" class="block text-neutral-300 hover:text-white transition">About</a>
+        <a href="#" class="block text-neutral-300 hover:text-white transition">Terms</a>
+        <a href="#" class="block text-neutral-300 hover:text-white transition">Privacy</a>
+        <a href="#" class="block text-neutral-300 hover:text-white transition">Trust centre</a>
+      </div>
+    </div>
+
+    <!-- Bottom Copyright -->
+    <div class="flex flex-col sm:flex-row justify-between items-center text-[11px] text-neutral-500 pt-6 border-t border-white/[0.04]">
+      <span>© 2026 Quenroth Financial. All rights reserved.</span>
+      <div class="flex gap-6 mt-3 sm:mt-0">
+        <a href="#" class="hover:text-neutral-400">Privacy Policy</a>
+        <a href="#" class="hover:text-neutral-400">Terms of service</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Giant Perspective Watermark -->
+  <div class="relative w-full flex justify-center mt-12 overflow-hidden">
+    <div class="watermark transition-transform duration-500 hover:scale-105">
+      Quenroth®
+    </div>
+  </div>
+</body>
+</html>

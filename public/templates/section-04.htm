@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Smarter Systems</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#050705; --card:#0b0f09; --lime:#b5e61d; --lime-hi:#d6ff4f; --ink:#f2f6e8; --muted:#8a9478; --line:rgba(214,255,79,.12);
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px); color-scheme:dark;
+}
+html{height:100%}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:'DM Sans',system-ui,sans-serif;line-height:1.55}
+.section{position:relative;min-height:100vh;padding:96px 24px;display:grid;align-content:center;overflow:hidden;
+  background:radial-gradient(55% 42% at 50% -5%,rgba(181,230,29,.42),transparent 70%),radial-gradient(40% 30% at 50% 100%,rgba(181,230,29,.10),transparent 70%),var(--bg)}
+.wrap{position:relative;z-index:1;width:100%;max-width:1120px;margin:0 auto}
+.head{text-align:center;margin-bottom:64px}
+.pill{display:inline-block;font-size:.86rem;font-weight:500;padding:6px 16px;border-radius:999px;color:var(--ink);border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.04);margin-bottom:24px}
+h1{font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:700;font-size:clamp(2.2rem,5vw,3.7rem);letter-spacing:-.025em;line-height:1.06;margin:0 auto;max-width:18ch}
+h1 i{font-style:normal;color:var(--lime);text-shadow:0 0 28px rgba(181,230,29,.55)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;perspective:1600px;align-items:stretch}
+.cell{position:relative;transform-style:preserve-3d;transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .4s ease-out;will-change:transform}
+.cell.live{transition:transform .08s linear}
+.cell::before{content:"";position:absolute;inset:14px 10px -10px;border-radius:26px;background:var(--gl,rgba(181,230,29,.16));filter:blur(34px);transform:translateZ(-40px);opacity:.7}
+.face{position:relative;height:100%;min-height:400px;padding:28px;border-radius:26px;overflow:hidden;display:flex;flex-direction:column;
+  background:linear-gradient(165deg,#12180d,var(--card) 55%);border:1px solid var(--line);
+  box-shadow:0 1px 0 rgba(255,255,255,.08) inset,0 34px 60px -30px rgba(0,0,0,.95)}
+.face::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .3s;
+  background:radial-gradient(340px circle at var(--mx,50%) var(--my,0%),rgba(214,255,79,.16),transparent 65%)}
+.cell:hover .face::after{opacity:1}
+.hero{--gl:rgba(181,230,29,.6);z-index:2}
+.hero .face{border:1px solid rgba(255,255,255,.35);color:#10160a;background:linear-gradient(160deg,#cdf53f,#95c50e 55%,#516d08);
+  box-shadow:0 1px 0 rgba(255,255,255,.55) inset,0 0 90px -10px rgba(181,230,29,.6),0 40px 70px -28px rgba(0,0,0,.9)}
+.hero .face::after{background:radial-gradient(340px circle at var(--mx,50%) var(--my,0%),rgba(255,255,255,.3),transparent 65%)}
+.text{position:relative;transform:translateZ(24px)}
+h2{font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:700;font-size:1.3rem;letter-spacing:-.01em;line-height:1.15;margin:0 0 10px}
+.text p{margin:0;font-size:.92rem;color:var(--muted);max-width:32ch}
+.hero .text p{color:rgba(16,22,10,.75)}
+.viz{position:relative;flex:1;display:flex;align-items:flex-end;justify-content:center;margin-top:26px;transform:translateZ(46px)}
+/* bars */
+.bars{width:100%;height:170px;display:flex;align-items:flex-end;gap:10px}
+.bar{flex:1;height:var(--h);display:flex;flex-direction:column;gap:3px;transform-origin:bottom;transform:scaleY(0);transition:transform .9s cubic-bezier(.2,.9,.2,1) var(--d);filter:drop-shadow(0 12px 10px rgba(0,0,0,.35))}
+.bar b{display:block;border-radius:5px}
+.bar .cap{flex:var(--c);background:#11170a}
+.bar .fill{flex:1;background:rgba(255,255,255,.62)}
+.in .bar{transform:scaleY(1)}
+/* donut */
+.donut{position:relative;width:190px;height:190px;align-self:center}
+.donut svg{width:100%;height:100%;transform:rotate(-90deg);overflow:visible}
+.track{fill:none;stroke:#1b2314;stroke-width:16}
+.prog{fill:none;stroke:var(--lime);stroke-width:16;stroke-linecap:round;stroke-dasharray:339.3;stroke-dashoffset:339.3;transition:stroke-dashoffset 1.6s cubic-bezier(.2,.8,.2,1) .2s;filter:drop-shadow(0 0 10px rgba(181,230,29,.85))}
+.in .prog{stroke-dashoffset:95}
+.donut span{position:absolute;inset:0;display:grid;place-items:center;font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:800;font-size:2.1rem;letter-spacing:-.02em}
+.legend{display:flex;justify-content:center;gap:22px;font-size:.84rem;color:var(--muted);margin-top:18px;transform:translateZ(30px)}
+.legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;background:var(--lime);box-shadow:0 0 8px var(--lime)}
+.legend i.p{background:#465238;box-shadow:none}
+/* revenue */
+.rev{width:100%;height:190px;overflow:visible}
+.rb{fill:rgba(255,255,255,.13);transform-box:fill-box;transform-origin:bottom;transform:scaleY(0);transition:transform .8s cubic-bezier(.2,.9,.2,1) var(--d)}
+.rb.hi{fill:url(#lg)}
+.in .rb{transform:scaleY(1)}
+.line{fill:none;stroke:var(--lime-hi);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 1.8s ease-out .5s;filter:drop-shadow(0 0 8px rgba(181,230,29,.9))}
+.in .line{stroke-dashoffset:0}
+.dot{fill:#fff;opacity:0;transition:opacity .4s 2.1s;filter:drop-shadow(0 0 10px var(--lime))}
+.in .dot{opacity:1}
+@media (max-width:960px){
+  .grid{grid-template-columns:1fr;max-width:460px;margin:0 auto;gap:34px}
+  .cell{transform:none}
+  .face{min-height:380px}
+}
+@media (prefers-reduced-motion:reduce){
+  .bar,.rb,.prog,.line,.dot,.cell{transition:none}
+  .bar,.rb{transform:scaleY(1)}.prog{stroke-dashoffset:95}.line{stroke-dashoffset:0}.dot{opacity:1}
+}
+</style>
+</head>
+<body>
+<section class="section" aria-labelledby="t">
+  <div class="wrap">
+    <div class="head">
+      <span class="pill">Features</span>
+      <h1 id="t">Smarter <i>Systems,</i> backed by <i>real numbers</i></h1>
+    </div>
+
+    <div class="grid" id="grid">
+      <article class="cell hero"><div class="face">
+        <div class="text"><h2>Workflow Automation</h2><p>Hand repeatable work to a process that runs the same way every time. Fewer handoffs, fewer dropped tasks, hours back every week.</p></div>
+        <div class="viz"><div class="bars" role="img" aria-label="Bar chart showing weekly hours saved rising over six weeks">
+          <div class="bar" style="--h:42%;--c:.9;--d:.1s"><b class="cap"></b><b class="fill"></b></div>
+          <div class="bar" style="--h:60%;--c:.7;--d:.2s"><b class="cap"></b><b class="fill"></b></div>
+          <div class="bar" style="--h:34%;--c:.5;--d:.3s"><b class="cap"></b><b class="fill"></b></div>
+          <div class="bar" style="--h:66%;--c:.55;--d:.4s"><b class="cap"></b><b class="fill"></b></div>
+          <div class="bar" style="--h:100%;--c:.6;--d:.5s"><b class="cap"></b><b class="fill"></b></div>
+          <div class="bar" style="--h:78%;--c:.35;--d:.6s"><b class="cap"></b><b class="fill"></b></div>
+        </div></div>
+      </div></article>
+
+      <article class="cell"><div class="face">
+        <div class="text"><h2>Delivery Tracking</h2><p>See what has shipped and what is still open across every team, without chasing anyone for a status update.</p></div>
+        <div class="viz"><div class="donut" role="img" aria-label="72 percent of work completed">
+          <svg viewBox="0 0 140 140"><circle class="track" cx="70" cy="70" r="54"/><circle class="prog" cx="70" cy="70" r="54"/></svg>
+          <span>72%</span>
+        </div></div>
+        <div class="legend"><div><i></i>Completed</div><div><i class="p"></i>Pending</div></div>
+      </div></article>
+
+      <article class="cell"><div class="face">
+        <div class="text"><h2>Revenue Analytics</h2><p>Bring spend, margin and forecast into one view, so the numbers you act on are the numbers that are true.</p></div>
+        <div class="viz"><svg class="rev" id="rev" viewBox="0 0 280 130" role="img" aria-label="Revenue trending upward"><defs><linearGradient id="lg" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#b5e61d" stop-opacity=".15"/><stop offset="1" stop-color="#d6ff4f" stop-opacity=".9"/></linearGradient></defs></svg></div>
+      </div></article>
+    </div>
+  </div>
+</section>
+<script>
+(function(){
+  var NS='http://www.w3.org/2000/svg',svg=document.getElementById('rev'),pts=[];
+  for(var i=0;i<28;i++){
+    var h=18+i*3.4+(i%3)*7+(i%5===0?-6:0),x=i*10,r=document.createElementNS(NS,'rect');
+    r.setAttribute('x',x);r.setAttribute('y',130-h);r.setAttribute('width',6);r.setAttribute('height',h);r.setAttribute('rx',2);
+    r.setAttribute('class','rb'+(i>=22?' hi':''));r.style.setProperty('--d',(i*.03)+'s');svg.appendChild(r);pts.push([x+3,130-h-4]);
+  }
+  var l=document.createElementNS(NS,'polyline');l.setAttribute('class','line');l.setAttribute('pathLength','1');
+  l.setAttribute('points',pts.map(function(p){return p.join(',')}).join(' '));svg.appendChild(l);
+  var d=document.createElementNS(NS,'circle'),lp=pts[pts.length-1];d.setAttribute('class','dot');d.setAttribute('cx',lp[0]);d.setAttribute('cy',lp[1]);d.setAttribute('r',4.5);svg.appendChild(d);
+
+  var grid=document.getElementById('grid');
+  if('IntersectionObserver' in window){
+    new IntersectionObserver(function(en,o){if(en[0].isIntersecting){grid.classList.add('in');o.disconnect()}},{threshold:.25}).observe(grid);
+  }else grid.classList.add('in');
+
+  var fine=matchMedia('(pointer:fine)').matches&&matchMedia('(min-width:961px)').matches,calm=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  document.querySelectorAll('.cell').forEach(function(c){
+    var f=c.querySelector('.face');
+    c.addEventListener('pointermove',function(e){
+      var r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;
+      f.style.setProperty('--mx',(x*100)+'%');f.style.setProperty('--my',(y*100)+'%');
+      if(fine&&!calm){c.classList.add('live');c.style.setProperty('--ry',((x-.5)*12)+'deg');c.style.setProperty('--rx',((.5-y)*9)+'deg')}
+    });
+    c.addEventListener('pointerleave',function(){c.classList.remove('live');c.style.setProperty('--ry','0deg');c.style.setProperty('--rx','0deg')});
+  });
+})();
+</script>
+</body>
+</html>

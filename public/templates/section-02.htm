@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Contact</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#020f0a; --deep:#06251a; --moss:#0d5c3b; --emerald:#34e39a; --gold:#d9c07a; --ink:#eaf6ef; --muted:#8db5a2;
+  --r:270px; --pw:210px; --ph:124px;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px); color-scheme:dark;
+}
+html{height:100%}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:'DM Sans',system-ui,sans-serif;line-height:1.6}
+.section{position:relative;min-height:100vh;display:grid;align-items:center;padding:80px 24px;overflow:hidden;
+  background:radial-gradient(55% 55% at 72% 45%,rgba(52,227,154,.16),transparent 70%),radial-gradient(45% 40% at 5% 100%,rgba(13,92,59,.6),transparent 70%),linear-gradient(170deg,#04160f,var(--bg) 65%)}
+.mark{position:absolute;left:50%;top:50%;z-index:0;pointer-events:none;user-select:none;white-space:nowrap;
+  transform:translate(calc(-50% + var(--mx,0px)),calc(-50% + var(--my,0px)));transition:transform .3s ease-out;
+  font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:800;font-size:clamp(5rem,23vw,21rem);letter-spacing:-.04em;line-height:1;
+  color:transparent;-webkit-text-stroke:1.5px rgba(52,227,154,.2);
+  background:linear-gradient(180deg,rgba(52,227,154,.10),rgba(52,227,154,0) 75%);-webkit-background-clip:text;background-clip:text}
+.wrap{position:relative;z-index:1;width:100%;max-width:1180px;margin:0 auto;display:grid;grid-template-columns:.9fr 1.1fr;gap:40px;align-items:center}
+h1{font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:700;font-size:clamp(2.2rem,4.6vw,3.6rem);line-height:1.04;letter-spacing:-.02em;margin:0 0 18px}
+.lead{color:var(--muted);max-width:42ch;margin:0 0 30px}
+form{max-width:440px}
+.field{margin-bottom:16px}
+label{display:block;font-size:.88rem;color:var(--gold);margin-bottom:6px}
+input,textarea{width:100%;font:inherit;color:var(--ink);padding:14px 16px;border-radius:14px;border:1px solid rgba(217,192,122,.22);
+  background:rgba(2,15,10,.6);backdrop-filter:blur(6px);box-shadow:0 3px 8px rgba(0,0,0,.5) inset;transition:border-color .2s,box-shadow .2s}
+textarea{min-height:104px;resize:vertical}
+input::placeholder,textarea::placeholder{color:#5a8471}
+input:focus-visible,textarea:focus-visible{outline:none;border-color:var(--gold);box-shadow:0 3px 8px rgba(0,0,0,.5) inset,0 0 0 3px rgba(217,192,122,.25)}
+button{width:100%;font:inherit;font-weight:500;font-size:1.02rem;color:#0a1a12;cursor:pointer;padding:16px;border:0;border-radius:14px;
+  background:linear-gradient(180deg,#f0dd9f,var(--gold));box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 6px 0 #8f7a3c,0 18px 28px -8px rgba(217,192,122,.4);transition:transform .12s,box-shadow .12s}
+button:hover{transform:translateY(-2px)}
+button:active{transform:translateY(5px);box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 1px 0 #8f7a3c,0 6px 12px -4px rgba(217,192,122,.4)}
+button:focus-visible{outline:2px solid var(--emerald);outline-offset:3px}
+.status{min-height:1.4em;margin:12px 0 0;color:var(--emerald);font-size:.92rem}
+
+/* 3D ring */
+.scene{position:relative;height:560px;perspective:1300px;display:grid;place-items:center}
+.tilt{position:relative;width:0;height:0;transform-style:preserve-3d;transform:rotateX(calc(-14deg + var(--ty,0deg))) rotateY(var(--tx,0deg));transition:transform .4s ease-out}
+.ring{position:absolute;left:0;top:0;transform-style:preserve-3d;animation:spin 36s linear infinite}
+.scene:hover .ring,.scene:focus-within .ring{animation-play-state:paused}
+@keyframes spin{to{transform:rotateY(-360deg)}}
+.panel{position:absolute;left:calc(var(--pw) / -2);top:calc(var(--ph) / -2);width:var(--pw);height:var(--ph);padding:18px 20px;border-radius:20px;text-decoration:none;color:var(--ink);
+  display:flex;flex-direction:column;justify-content:center;gap:2px;
+  transform:rotateY(calc(var(--i) * 60deg)) translateZ(var(--r));
+  background:linear-gradient(150deg,rgba(13,92,59,.55),rgba(6,37,26,.7));backdrop-filter:blur(10px);
+  border:1px solid rgba(217,192,122,.3);box-shadow:0 1px 0 rgba(255,255,255,.18) inset,0 30px 50px -20px rgba(0,0,0,.8),0 0 40px -14px rgba(52,227,154,.4)}
+.panel small{color:var(--gold);font-size:.82rem}
+.panel b{font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:500;font-size:1.06rem;word-break:break-word}
+.panel:hover,.panel:focus-visible{border-color:var(--emerald);outline:none}
+.core{position:absolute;left:-60px;top:-60px;width:120px;height:120px;border-radius:50%;transform:translateZ(0);
+  background:radial-gradient(circle at 35% 30%,#b6ffe0,var(--emerald) 35%,#0d5c3b 75%);box-shadow:0 0 70px 14px rgba(52,227,154,.45);animation:pulse 4s ease-in-out infinite}
+@keyframes pulse{50%{box-shadow:0 0 100px 28px rgba(52,227,154,.6)}}
+.orbit{position:absolute;left:calc(var(--r) * -1);top:calc(var(--r) * -1);width:calc(var(--r) * 2);height:calc(var(--r) * 2);border-radius:50%;
+  border:1px solid rgba(217,192,122,.35);transform:rotateX(90deg)}
+.orbit.o2{transform:rotateX(90deg) translateZ(-150px) scale(.8);border-color:rgba(52,227,154,.25)}
+.orbit.o3{transform:rotateX(90deg) translateZ(150px) scale(.8);border-color:rgba(52,227,154,.25)}
+.floor{position:absolute;left:50%;bottom:6%;width:78%;height:60px;transform:translateX(-50%);border-radius:50%;background:radial-gradient(closest-side,rgba(52,227,154,.32),transparent);filter:blur(8px)}
+
+@media (max-width:960px){
+  :root{--r:190px;--pw:170px;--ph:110px}
+  .wrap{grid-template-columns:1fr;gap:24px}
+  .scene{order:-1;height:430px}
+  form{max-width:none}
+}
+@media (prefers-reduced-motion:reduce){.ring,.core{animation:none}.mark,.tilt{transition:none}}
+</style>
+</head>
+<body>
+<section class="section" aria-labelledby="t">
+  <div class="mark" id="mark" aria-hidden="true">CONTACT</div>
+  <div class="wrap">
+    <div>
+      <h1 id="t">Let's talk about your next big idea</h1>
+      <p class="lead">Share a few details and our team will get back to you within one working day.</p>
+      <form id="form" novalidate>
+        <div class="field"><label for="n">Your name</label><input id="n" name="n" autocomplete="name" placeholder="Raja Kumar" required></div>
+        <div class="field"><label for="e">Email address</label><input id="e" name="e" type="email" autocomplete="email" placeholder="you@example.com" required></div>
+        <div class="field"><label for="m">Message</label><textarea id="m" name="m" placeholder="Tell us what you need" required></textarea></div>
+        <button type="submit">Send message</button>
+        <p class="status" id="s" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+
+    <div class="scene" id="scene">
+      <div class="floor"></div>
+      <div class="tilt" id="tilt">
+        <div class="orbit"></div><div class="orbit o2"></div><div class="orbit o3"></div>
+        <div class="core"></div>
+        <div class="ring">
+          <a class="panel" style="--i:0" href="mailto:hello@yourbrand.com"><small>Email</small><b>hello@yourbrand.com</b></a>
+          <a class="panel" style="--i:1" href="tel:+919876543210"><small>Call us</small><b>+91 98765 43210</b></a>
+          <a class="panel" style="--i:2" href="https://wa.me/919876543210"><small>WhatsApp</small><b>Chat with us</b></a>
+          <a class="panel" style="--i:3" href="#"><small>Office</small><b>Mumbai, India</b></a>
+          <a class="panel" style="--i:4" href="#"><small>Working hours</small><b>Mon to Sat, 10am to 7pm</b></a>
+          <a class="panel" style="--i:5" href="#"><small>Instagram</small><b>@yourbrand</b></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+(function(){
+  var fine=matchMedia('(pointer:fine)').matches&&matchMedia('(min-width:961px)').matches,calm=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var sec=document.querySelector('.section'),mark=document.getElementById('mark'),tilt=document.getElementById('tilt');
+  if(fine&&!calm){
+    sec.addEventListener('pointermove',function(e){
+      var r=sec.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+      mark.style.setProperty('--mx',(x*-40)+'px');mark.style.setProperty('--my',(y*-24)+'px');
+      tilt.style.setProperty('--tx',(x*16)+'deg');tilt.style.setProperty('--ty',(y*-10)+'deg');
+    });
+  }
+  document.getElementById('form').addEventListener('submit',function(e){
+    e.preventDefault();var f=e.target,s=document.getElementById('s');
+    if(!f.n.value.trim()||!/^\S+@\S+\.\S+$/.test(f.e.value)||!f.m.value.trim()){s.style.color='#ffb4a8';s.textContent='Please add your name, a valid email and a message.';return}
+    s.style.color='';s.textContent='Message sent. We will reply soon.';f.reset();
+  });
+})();
+</script>
+</body>
+</html>

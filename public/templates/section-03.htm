@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Service Bento</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#060606; --card:#0d0d0d; --line:rgba(255,255,255,.09); --ink:#f4f1ea; --muted:#8c8a84; --champ:#e6d3a3;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px); color-scheme:dark;
+}
+html{height:100%}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:'DM Sans',system-ui,sans-serif;line-height:1.55}
+.section{position:relative;min-height:100vh;padding:96px 24px;display:grid;align-content:center;overflow:hidden;
+  background:radial-gradient(70% 45% at 50% 0,rgba(230,211,163,.10),transparent 70%),radial-gradient(50% 40% at 50% 100%,rgba(255,255,255,.05),transparent 70%),var(--bg)}
+.wrap{width:100%;max-width:1100px;margin:0 auto}
+.head{text-align:center;margin-bottom:56px}
+.pill{display:inline-block;font-size:.86rem;font-weight:500;padding:6px 16px;border-radius:999px;color:var(--champ);border:1px solid rgba(230,211,163,.35);background:rgba(230,211,163,.06);margin-bottom:20px}
+h1{font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:700;font-size:clamp(2.2rem,4.8vw,3.6rem);letter-spacing:-.025em;line-height:1.05;margin:0 0 14px}
+.lead{color:var(--muted);max-width:54ch;margin:0 auto}
+.lead b{color:var(--ink);font-weight:500}
+.bento{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:minmax(190px,auto);gap:16px;perspective:1600px}
+.cell{position:relative;transform-style:preserve-3d;transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .4s ease-out;will-change:transform}
+.cell.live{transition:transform .08s linear}
+.a{grid-column:1;grid-row:1/3}.b{grid-column:2/5;grid-row:1}.c{grid-column:2/4;grid-row:2}.d{grid-column:4;grid-row:2}.e{grid-column:1/4;grid-row:3}.f{grid-column:4;grid-row:3}
+.face{position:relative;height:100%;min-height:190px;padding:26px;border-radius:22px;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;
+  background:linear-gradient(160deg,#151515,var(--card) 60%);border:1px solid var(--line);
+  box-shadow:0 1px 0 rgba(255,255,255,.08) inset,0 30px 50px -30px rgba(0,0,0,.95)}
+.face::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .3s;
+  background:radial-gradient(360px circle at var(--mx,50%) var(--my,0%),rgba(230,211,163,.16),transparent 65%)}
+.cell:hover .face::before{opacity:1}
+.face::after{content:"";position:absolute;inset:0;border-radius:22px;padding:1px;pointer-events:none;opacity:0;transition:opacity .3s;
+  background:radial-gradient(240px circle at var(--mx,50%) var(--my,0%),rgba(230,211,163,.7),transparent 70%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
+.cell:hover .face::after{opacity:1}
+.text{position:relative;transform:translateZ(24px);max-width:24ch}
+h2{font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:500;font-size:1.28rem;letter-spacing:-.01em;line-height:1.15;margin:0 0 8px}
+.text p{margin:0;color:var(--muted);font-size:.9rem}
+.ico{position:absolute;right:22px;top:16px;width:118px;height:118px;transform:translateZ(60px);
+  filter:drop-shadow(1px 1px 0 #55524a) drop-shadow(2px 2px 0 #3a3833) drop-shadow(3px 3px 0 #292826) drop-shadow(4px 4px 0 #1b1a19) drop-shadow(0 22px 18px rgba(0,0,0,.8));
+  transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+.cell:hover .ico{transform:translateZ(90px) rotate(-6deg) scale(1.08)}
+.a .ico{left:50%;right:auto;top:26px;width:170px;height:170px;margin-left:-85px}
+.ch{fill:url(#chrome);stroke:rgba(255,255,255,.55);stroke-width:1}
+.ch2{fill:none;stroke:url(#chrome);stroke-width:7;stroke-linecap:round;stroke-linejoin:round}
+.hole{fill:#0a0a0a}
+@media (max-width:900px){
+  .bento{grid-template-columns:1fr 1fr}
+  .a,.b,.c,.d,.e,.f{grid-column:auto;grid-row:auto}
+  .a,.b,.e{grid-column:1/3}
+  .a .ico{width:130px;height:130px;margin-left:-65px}
+  .a .face{min-height:280px}
+  .cell{transform:none}
+}
+@media (max-width:560px){
+  .bento{grid-template-columns:1fr}
+  .a,.b,.c,.d,.e,.f{grid-column:1}
+  .text{max-width:none}
+}
+@media (prefers-reduced-motion:reduce){.cell,.ico{transition:none}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="chrome" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fbf7ee"/><stop offset=".3" stop-color="#a9a598"/><stop offset=".55" stop-color="#3b3935"/><stop offset=".75" stop-color="#cfc8b6"/><stop offset="1" stop-color="#6d6a62"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<section class="section" aria-labelledby="t">
+  <div class="wrap">
+    <div class="head">
+      <span class="pill">Features</span>
+      <h1 id="t">How we can help</h1>
+      <p class="lead">Work that answers to <b>the business</b>, holds up for <b>the people using it</b>, and leaves you with <b>something you can measure</b>.</p>
+    </div>
+
+    <div class="bento" id="bento">
+      <article class="cell a"><div class="face">
+        <svg class="ico" viewBox="0 0 120 120" aria-hidden="true"><path class="ch" d="M60 8C74 34 88 52 88 74L60 112 32 74C32 52 46 34 60 8Z"/><circle class="hole" cx="60" cy="70" r="7"/><path d="M60 77V108" stroke="#0a0a0a" stroke-width="3"/></svg>
+        <div class="text"><h2>Interface Design</h2><p>Screens that are quick to read and quicker to use, on web and on mobile.</p></div>
+      </div></article>
+
+      <article class="cell b"><div class="face">
+        <svg class="ico" viewBox="0 0 120 120" aria-hidden="true"><rect class="ch" x="14" y="24" width="92" height="62" rx="9"/><rect class="hole" x="21" y="31" width="78" height="48" rx="5"/><path class="ch2" d="M48 46 38 55 48 64M72 46 82 55 72 64M64 42 56 68"/><path class="ch" d="M4 92H116L108 102H12Z"/></svg>
+        <div class="text"><h2>Web Development</h2><p>Turning a file into a site that is fast, responsive and easy to keep updated.</p></div>
+      </div></article>
+
+      <article class="cell c"><div class="face">
+        <svg class="ico" viewBox="0 0 120 120" aria-hidden="true"><path class="ch" d="M36 8 60 20V44L36 56 12 44V20Z"/><path class="ch" d="M84 8 108 20V44L84 56 60 44V20Z" opacity=".85"/><path class="ch" d="M60 56 84 68V92L60 104 36 92V68Z"/><path d="M36 30V56M84 30V56M60 68V104" stroke="#0a0a0a" stroke-opacity=".5" stroke-width="2"/></svg>
+        <div class="text"><h2>Component Libraries</h2><p>Reusable parts so the tenth screen costs far less than the first.</p></div>
+      </div></article>
+
+      <article class="cell d"><div class="face">
+        <svg class="ico" viewBox="0 0 120 120" aria-hidden="true"><path class="ch" d="M60 10C30 10 10 32 10 58c0 22 16 34 32 34 10 0 10-10 20-10s14 14 30 14c10 0 18-8 18-26C110 30 90 10 60 10Z"/><circle class="hole" cx="38" cy="46" r="8"/><circle class="hole" cx="62" cy="32" r="8"/><circle class="hole" cx="86" cy="46" r="8"/><circle class="hole" cx="40" cy="72" r="7"/></svg>
+        <div class="text"><h2>Brand Systems</h2><p>Marks, type and colour that hold together wherever they end up.</p></div>
+      </div></article>
+
+      <article class="cell e"><div class="face">
+        <svg class="ico" viewBox="0 0 120 120" aria-hidden="true"><path class="ch" d="M40 8C26 8 16 19 16 32c0 18 24 40 24 40S64 50 64 32C64 19 54 8 40 8Z"/><circle class="hole" cx="40" cy="32" r="9"/><path class="ch2" d="M46 76C80 70 96 82 84 96 74 106 44 100 40 112" stroke-dasharray="1 12"/><circle class="ch" cx="98" cy="30" r="9"/></svg>
+        <div class="text"><h2>Product Strategy</h2><p>Deciding what to build, what to skip, and how to know it worked.</p></div>
+      </div></article>
+
+      <article class="cell f"><div class="face">
+        <svg class="ico" viewBox="0 0 120 120" aria-hidden="true"><circle class="ch" cx="50" cy="50" r="40"/><circle class="hole" cx="50" cy="50" r="31"/><path class="ch" d="M42 34 68 50 42 66Z"/><path class="ch2" d="M80 80 108 108"/></svg>
+        <div class="text"><h2>Testing &amp; Handoff</h2><p>Prototypes tried with real users, then a clean handover to engineering.</p></div>
+      </div></article>
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){
+  var fine=matchMedia('(pointer:fine)').matches&&matchMedia('(min-width:901px)').matches,calm=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  document.querySelectorAll('.cell').forEach(function(c){
+    var f=c.querySelector('.face');
+    c.addEventListener('pointermove',function(e){
+      var r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;
+      f.style.setProperty('--mx',(x*100)+'%');f.style.setProperty('--my',(y*100)+'%');
+      if(fine&&!calm){c.classList.add('live');c.style.setProperty('--ry',((x-.5)*9)+'deg');c.style.setProperty('--rx',((.5-y)*7)+'deg')}
+    });
+    c.addEventListener('pointerleave',function(){c.classList.remove('live');c.style.setProperty('--ry','0deg');c.style.setProperty('--rx','0deg')});
+  });
+})();
+</script>
+</body>
+</html>

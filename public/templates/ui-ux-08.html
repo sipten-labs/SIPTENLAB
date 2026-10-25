@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Banking Home — Relibank 3D Dashboard</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            brandBlue: {
+              50: '#EEF2FF',
+              100: '#E0E7FF',
+              200: '#C7D2FE',
+              300: '#A5B4FC',
+              400: '#818CF8',
+              500: '#6366F1',
+              600: '#4F46E5',
+            },
+            periwinkle: {
+              300: '#B8C2F2',
+              400: '#94A3E8',
+              500: '#7588DB',
+              600: '#5C6EC4',
+            },
+            porcelain: '#F5F6FA',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      user-select: none;
+    }
+
+    body {
+      background: radial-gradient(ellipse at 50% 0%, #FFFFFF 0%, #EDF0F7 60%, #E2E6F0 100%);
+      color: #1E293B;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Ambient background reflections */
+    .ambient-glow {
+      position: fixed;
+      top: -150px;
+      right: 15%;
+      width: 550px;
+      height: 450px;
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, rgba(147, 197, 253, 0.08) 50%, transparent 75%);
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* 3D Glass Surface Card */
+    .bank-card {
+      position: relative;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(226, 232, 240, 0.8);
+      box-shadow: 0 10px 25px -5px rgba(30, 41, 59, 0.04), 0 20px 48px -10px rgba(117, 136, 219, 0.08);
+      transition: transform 0.22s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+      will-change: transform;
+      overflow: hidden;
+    }
+
+    .bank-card:hover {
+      border-color: rgba(148, 163, 232, 0.5);
+      box-shadow: 0 16px 36px -8px rgba(30, 41, 59, 0.08), 0 0 20px rgba(117, 136, 219, 0.16);
+    }
+
+    /* Cursor Spotlight Glow Effect */
+    .bank-card::before {
+      content: '';
+      position: absolute;
+      top: var(--mouse-y, -250px);
+      left: var(--mouse-x, -250px);
+      width: 260px;
+      height: 260px;
+      background: radial-gradient(circle closest-side, rgba(99, 102, 241, 0.12), transparent 75%);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      border-radius: 9999px;
+      z-index: 10;
+    }
+
+    .bank-card:hover::before {
+      opacity: 1;
+    }
+
+    /* Realistic 3D Flippable Periwinkle Credit Card */
+    .card-3d-scene {
+      perspective: 1200px;
+      width: 100%;
+      height: 100%;
+      min-height: 195px;
+    }
+
+    .card-3d-object {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.7s cubic-bezier(0.4, 0.2, 0.2, 1);
+      border-radius: 20px;
+      cursor: pointer;
+    }
+
+    .card-3d-object.is-flipped {
+      transform: rotateY(180deg);
+    }
+
+    .card-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    /* Card Front Styling */
+    .card-front {
+      background: linear-gradient(135deg, #7F93E8 0%, #687DCF 40%, #586CBF 100%);
+      box-shadow: 0 20px 35px -10px rgba(88, 108, 191, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+    }
+
+    .card-front::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.28) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    /* Card Back Styling */
+    .card-back {
+      background: linear-gradient(135deg, #586CBF 0%, #4658A3 100%);
+      transform: rotateY(180deg);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      box-shadow: 0 20px 35px -10px rgba(88, 108, 191, 0.45);
+    }
+
+    /* Dynamic active section animation */
+    .section-view {
+      display: none;
+      animation: tabFadeIn 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .section-view.active-view {
+      display: block;
+    }
+
+    @keyframes tabFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Custom scrollbar hiding */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+
+<body class="p-2 sm:p-4 md:p-6 flex items-center justify-center relative">
+
+  <div class="ambient-glow"></div>
+
+  <!-- Master Application Wrapper -->
+  <div class="w-full max-w-[1360px] bg-[#FAFBFD] rounded-[28px] border border-slate-200/90 shadow-2xl overflow-hidden flex flex-col md:flex-row relative z-10 min-h-[780px]">
+
+    <!-- ================= LEFT DARK VERTICAL SIDEBAR ================= -->
+    <aside class="w-full md:w-20 bg-[#16181F] flex md:flex-col items-center justify-between p-3 md:py-6 border-b md:border-b-0 md:border-r border-slate-800 flex-shrink-0 z-20">
+      
+      <!-- Top Group: Logo -->
+      <div class="flex flex-col items-center gap-6">
+        <button class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-brandBlue-600 to-periwinkle-400 flex items-center justify-center text-white shadow-lg shadow-indigo-900/40 active:scale-95 transition-transform">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+          </svg>
+        </button>
+
+        <!-- Vertical Navigation Icons -->
+        <nav class="flex md:flex-col items-center gap-2">
+          <!-- Home / Dashboard -->
+          <button onclick="switchTab('dashboard')" id="nav-btn-dashboard" class="w-11 h-11 rounded-xl bg-white/10 text-white flex items-center justify-center transition-all group relative" title="Dashboard">
+            <svg class="w-5 h-5 text-periwinkle-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+            </svg>
+            <span class="absolute left-14 bg-slate-900 text-white text-[11px] font-semibold px-2 py-1 rounded shadow-md hidden md:group-hover:block whitespace-nowrap z-30">Dashboard</span>
+          </button>
+
+          <!-- Cards & Wallet -->
+          <button onclick="switchTab('cards')" id="nav-btn-cards" class="w-11 h-11 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 flex items-center justify-center transition-all group relative" title="Cards & Wallet">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+            </svg>
+            <span class="absolute left-14 bg-slate-900 text-white text-[11px] font-semibold px-2 py-1 rounded shadow-md hidden md:group-hover:block whitespace-nowrap z-30">Cards & Wallet</span>
+          </button>
+
+          <!-- Analytics -->
+          <button onclick="switchTab('analytics')" id="nav-btn-analytics" class="w-11 h-11 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 flex items-center justify-center transition-all group relative" title="Analytics">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+            </svg>
+            <span class="absolute left-14 bg-slate-900 text-white text-[11px] font-semibold px-2 py-1 rounded shadow-md hidden md:group-hover:block whitespace-nowrap z-30">Analytics</span>
+          </button>
+
+          <!-- Transactions -->
+          <button onclick="switchTab('transactions')" id="nav-btn-transactions" class="w-11 h-11 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 flex items-center justify-center transition-all group relative" title="Transactions">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
+            </svg>
+            <span class="absolute left-14 bg-slate-900 text-white text-[11px] font-semibold px-2 py-1 rounded shadow-md hidden md:group-hover:block whitespace-nowrap z-30">Transactions</span>
+          </button>
+        </nav>
+      </div>
+
+      <!-- Bottom Group: Settings & Profile -->
+      <div class="flex md:flex-col items-center gap-2.5">
+        <button class="w-10 h-10 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 flex items-center justify-center transition-all" title="Settings">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+        </button>
+
+        <button class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-500 to-periwinkle-400 p-0.5 text-white flex items-center justify-center font-bold text-xs shadow-md" title="Alif Reza">
+          AR
+        </button>
+      </div>
+
+    </aside>
+
+    <!-- ================= MAIN CONTENT AREA ================= -->
+    <main class="flex-1 flex flex-col p-4 sm:p-6 lg:p-7 overflow-y-auto no-scrollbar">
+      
+      <!-- TOP HEADER -->
+      <header class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-5 border-b border-slate-200/80">
+        
+        <div>
+          <!-- Relibank Brand Header Tag -->
+          <div class="flex items-center gap-2 mb-1">
+            <span class="bg-[#16181F] text-white px-2.5 py-0.5 rounded-md text-[10px] font-black tracking-wider uppercase">FINANCE</span>
+            <span class="text-xs font-semibold text-slate-400">Finance dashboard</span>
+            <span class="text-slate-300">•</span>
+            <span class="text-xs font-bold text-slate-700">Relibank</span>
+          </div>
+
+          <!-- Greeting with gradient text -->
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-800 tracking-tight leading-none mt-1">
+            Hello, <span class="text-transparent bg-clip-text bg-gradient-to-r from-periwinkle-600 via-brandBlue-500 to-indigo-600">Alif Reza</span>
+          </h1>
+          <p class="text-xs text-slate-400 font-medium mt-1">View and control your finances here.</p>
+        </div>
+
+        <!-- Top Right Actions & Quick Contact Avatars -->
+        <div class="flex flex-wrap items-center gap-3">
+          
+          <!-- Avatar List (AK, MR, SJ, TH, LP, DW, KD, +) -->
+          <div class="flex items-center -space-x-1.5 p-1 bg-white rounded-full border border-slate-200/80 shadow-sm">
+            <div class="w-7 h-7 rounded-full bg-amber-500 text-white text-[10px] font-black flex items-center justify-center ring-2 ring-white">AK</div>
+            <div class="w-7 h-7 rounded-full bg-blue-500 text-white text-[10px] font-black flex items-center justify-center ring-2 ring-white">MR</div>
+            <div class="w-7 h-7 rounded-full bg-emerald-500 text-white text-[10px] font-black flex items-center justify-center ring-2 ring-white">SJ</div>
+            <div class="w-7 h-7 rounded-full bg-purple-500 text-white text-[10px] font-black flex items-center justify-center ring-2 ring-white">TH</div>
+            <div class="w-7 h-7 rounded-full bg-orange-500 text-white text-[10px] font-black flex items-center justify-center ring-2 ring-white">LP</div>
+            <div class="w-7 h-7 rounded-full bg-indigo-600 text-white text-[10px] font-black flex items-center justify-center ring-2 ring-white">DW</div>
+            <div class="w-7 h-7 rounded-full bg-teal-600 text-white text-[10px] font-black flex items-center justify-center ring-2 ring-white">KD</div>
+            <button onclick="openModal('sendMoney')" class="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-black flex items-center justify-center ring-2 ring-white transition-colors" title="Send to new contact">+</button>
+          </div>
+
+          <!-- Quick Search Bar -->
+          <div class="relative">
+            <input type="text" placeholder="Search..." class="w-36 sm:w-44 bg-white border border-slate-200 rounded-full pl-8 pr-3 py-1.5 text-xs text-slate-700 placeholder-slate-400 focus:outline-none focus:border-periwinkle-400 shadow-sm transition-all">
+            <svg class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+          </div>
+
+          <!-- Quick Export / Share Button -->
+          <button class="w-8 h-8 rounded-full bg-white hover:bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-600 shadow-sm transition-transform active:scale-95" title="Export">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+            </svg>
+          </button>
+        </div>
+
+      </header>
+
+      <!-- ================= SECTION 1: DASHBOARD (MAIN) ================= -->
+      <div id="view-dashboard" class="section-view active-view pt-5">
+        
+        <!-- Top Row: Balance Statistics (Col 5), 3D Interactive Card (Col 4), Analytics Gauge (Col 3) -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch mb-4">
+          
+          <!-- 1. Balance Statistics Card (5 cols) -->
+          <div class="lg:col-span-5 bank-card p-4 sm:p-5 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between text-xs text-slate-400 font-semibold mb-1">
+                <span>Balance statistics</span>
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+              </div>
+              <div class="flex items-baseline gap-2">
+                <span class="text-2xl sm:text-3xl font-extrabold text-slate-800 tracking-tight">$38,729.61</span>
+                <span class="text-xs text-slate-400 font-medium">total amount</span>
+              </div>
+            </div>
+
+            <!-- Mini Line Chart Trend & Pill Bar Visuals -->
+            <div class="grid grid-cols-12 gap-3 items-end pt-4">
+              
+              <!-- Mini spline line + text -->
+              <div class="col-span-5 flex flex-col justify-end">
+                <div class="h-10 w-full mb-1">
+                  <svg class="w-full h-full" viewBox="0 0 100 40">
+                    <path d="M 0 30 Q 25 15, 50 25 T 100 8" fill="none" stroke="#687DCF" stroke-width="2.5" stroke-linecap="round"/>
+                    <circle cx="100" cy="8" r="3.5" fill="#687DCF" class="animate-pulse"/>
+                  </svg>
+                </div>
+                <div class="flex items-center gap-1">
+                  <span class="text-xs font-black text-slate-800">14%</span>
+                  <span class="text-[9px] text-emerald-600 font-bold bg-emerald-50 px-1 py-0.2 rounded">↑ Up</span>
+                </div>
+                <p class="text-[10px] text-slate-400 leading-tight mt-0.5">Always see your monthly updates</p>
+              </div>
+
+              <!-- Pill/Stadium Bar Chart (Jan, Feb, Mar, Apr, May) -->
+              <div class="col-span-7 flex items-end justify-between gap-1.5 h-24 pb-1">
+                <div class="flex flex-col items-center flex-1 group cursor-pointer">
+                  <div class="w-full max-w-[20px] h-10 bg-periwinkle-300 rounded-full group-hover:bg-periwinkle-500 transition-all"></div>
+                  <span class="text-[9px] text-slate-400 font-bold mt-1.5">Jan</span>
+                </div>
+                <div class="flex flex-col items-center flex-1 group cursor-pointer">
+                  <div class="w-full max-w-[20px] h-16 bg-periwinkle-400 rounded-full group-hover:bg-periwinkle-500 transition-all"></div>
+                  <span class="text-[9px] text-slate-400 font-bold mt-1.5">Feb</span>
+                </div>
+                <div class="flex flex-col items-center flex-1 group cursor-pointer">
+                  <div class="w-full max-w-[20px] h-12 bg-periwinkle-300 rounded-full group-hover:bg-periwinkle-500 transition-all"></div>
+                  <span class="text-[9px] text-slate-400 font-bold mt-1.5">Mar</span>
+                </div>
+                <div class="flex flex-col items-center flex-1 group cursor-pointer">
+                  <div class="w-full max-w-[20px] h-20 bg-periwinkle-500 rounded-full group-hover:scale-105 transition-all shadow-sm"></div>
+                  <span class="text-[9px] text-periwinkle-600 font-black mt-1.5">Apr</span>
+                </div>
+                <div class="flex flex-col items-center flex-1 group cursor-pointer">
+                  <div class="w-full max-w-[20px] h-18 bg-periwinkle-400 rounded-full group-hover:bg-periwinkle-500 transition-all"></div>
+                  <span class="text-[9px] text-slate-400 font-bold mt-1.5">May</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- 2. 3D Flippable Periwinkle Credit Card ('THE BANK OF ANYTHING') (4 cols) -->
+          <div class="lg:col-span-4">
+            <div class="card-3d-scene" id="cardScene">
+              <div id="flipperCard" class="card-3d-object" onclick="toggleCardFlip()">
+                
+                <!-- CARD FRONT -->
+                <div class="card-face card-front p-4 sm:p-5 flex flex-col justify-between text-white select-none">
+                  <!-- Header: Bank name & chip -->
+                  <div class="flex items-start justify-between">
+                    <div>
+                      <div class="text-[10px] font-black uppercase tracking-widest opacity-90 font-mono">THE BANK OF ANYTHING</div>
+                      <!-- Gold EMV Chip -->
+                      <div class="w-9 h-7 rounded-md bg-gradient-to-tr from-amber-300 via-amber-400 to-yellow-200 mt-2.5 border border-amber-500/50 shadow-inner flex items-center justify-center p-1">
+                        <div class="w-full h-full border border-amber-600/40 rounded flex flex-col justify-around">
+                          <div class="h-[1px] bg-amber-700/30 w-full"></div>
+                          <div class="h-[1px] bg-amber-700/30 w-full"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Contactless Icon -->
+                    <svg class="w-4 h-4 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071a10 10 0 0114.142 0M1.393 9.393a15 15 0 0121.214 0"/>
+                    </svg>
+                  </div>
+
+                  <!-- Card Number -->
+                  <div class="font-mono text-sm sm:text-base font-bold tracking-widest drop-shadow text-white/95">
+                    •••• &nbsp;•••• &nbsp;•••• &nbsp;2734
+                  </div>
+
+                  <!-- Footer: Expiration, Cardholder & Hologram Circles -->
+                  <div class="flex items-end justify-between text-[10px]">
+                    <div>
+                      <div class="text-[9px] opacity-75 font-mono">09/28</div>
+                      <div class="font-bold tracking-wider uppercase text-white/95 mt-0.5">ALIF REZA</div>
+                    </div>
+                    
+                    <!-- Mastercard Dual Circles -->
+                    <div class="flex items-center -space-x-2.5 opacity-90">
+                      <span class="w-6 h-6 rounded-full bg-white/40 backdrop-blur-md"></span>
+                      <span class="w-6 h-6 rounded-full bg-white/25 backdrop-blur-md"></span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- CARD BACK -->
+                <div class="card-face card-back p-4 sm:p-5 flex flex-col justify-between text-white select-none">
+                  <div>
+                    <div class="w-full h-8 bg-black/50 -mx-5 mt-1"></div>
+                    <div class="mt-3 flex items-center justify-between bg-white/20 p-2 rounded-lg">
+                      <span class="text-[9px] font-mono opacity-70">AUTHORIZED SIGNATURE</span>
+                      <span class="font-mono text-xs font-black bg-white text-slate-800 px-2 py-0.5 rounded">842</span>
+                    </div>
+                  </div>
+                  <div class="text-right">
+                    <p class="text-[9px] opacity-75">Click anywhere to flip back</p>
+                    <span class="text-[10px] font-mono opacity-80">RELIBANK WORLD ELITE</span>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Analytics Semi-Circle Gauge Card (3 cols) -->
+          <div class="lg:col-span-3 bank-card p-4 sm:p-5 flex flex-col justify-between">
+            <div class="flex items-center justify-between text-xs pb-1 border-b border-slate-100">
+              <span class="font-bold text-slate-700">Analytics</span>
+              <button class="text-slate-400 hover:text-slate-600 font-bold">•••</button>
+            </div>
+
+            <!-- Legend Pills -->
+            <div class="flex items-center justify-between text-[10px] text-slate-400 font-semibold my-2">
+              <span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-[#687DCF]"></span>Income</span>
+              <span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-[#EAB308]"></span>Expenses</span>
+              <span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-[#F43F5E]"></span>Tax</span>
+            </div>
+
+            <!-- Semi-Circular SVG Gauge -->
+            <div class="relative flex flex-col items-center justify-center pt-2">
+              <div class="w-36 h-20 overflow-hidden relative flex items-end justify-center">
+                <svg class="w-36 h-36 -rotate-180" viewBox="0 0 100 100">
+                  <!-- Background Track -->
+                  <circle cx="50" cy="50" r="38" fill="transparent" stroke="#E2E8F0" stroke-width="10" stroke-dasharray="119.38 238.76" stroke-dashoffset="0"/>
+                  <!-- Yellow segment (Expenses) -->
+                  <circle cx="50" cy="50" r="38" fill="transparent" stroke="#FBBF24" stroke-width="10" stroke-dasharray="35 238.76" stroke-dashoffset="0"/>
+                  <!-- Periwinkle Primary segment (90% overall indicator) -->
+                  <circle cx="50" cy="50" r="38" fill="transparent" stroke="#687DCF" stroke-width="10" stroke-dasharray="84 238.76" stroke-dashoffset="-35"/>
+                </svg>
+
+                <!-- Center Metric Text -->
+                <div class="absolute bottom-0 text-center">
+                  <div class="text-2xl font-black text-slate-800 leading-none">90%</div>
+                  <div class="text-[9px] text-slate-400 font-bold mt-0.5">Score</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="text-center text-[10px] text-emerald-600 font-bold mt-2 bg-emerald-50 py-1 rounded-lg">
+              Optimal Health Index
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Bottom Row: Last Transactions (Col 5), Expenses & Income + Premium Banner (Col 7) -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
+          
+          <!-- Last Transactions (5 cols) -->
+          <div class="lg:col-span-5 bank-card p-4 sm:p-5 flex flex-col justify-between">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+              <h3 class="text-xs font-bold text-slate-800">Last transactions</h3>
+              <button onclick="switchTab('transactions')" class="text-[11px] font-bold text-periwinkle-600 hover:text-periwinkle-500 transition-colors">See all →</button>
+            </div>
+
+            <!-- List items -->
+            <div class="space-y-2.5 my-2">
+              
+              <!-- 1. Clerxwind Studio -->
+              <div class="flex items-center justify-between p-2 rounded-xl hover:bg-slate-50 transition-colors">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-full bg-[#16181F] text-white flex items-center justify-center font-bold text-xs shadow-sm">
+                    CS
+                  </div>
+                  <div>
+                    <div class="text-xs font-bold text-slate-800">Clerxwind Studio</div>
+                    <div class="text-[10px] text-slate-400">03 Apr / 2026</div>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <div class="text-xs font-extrabold text-slate-800">$853</div>
+                  <div class="text-[9px] text-slate-400 font-medium">Design System</div>
+                </div>
+              </div>
+
+              <!-- 2. Ralph Edwards -->
+              <div class="flex items-center justify-between p-2 rounded-xl hover:bg-slate-50 transition-colors">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-full bg-[#687DCF] text-white flex items-center justify-center font-bold text-xs shadow-sm">
+                    RE
+                  </div>
+                  <div>
+                    <div class="text-xs font-bold text-slate-800">Ralph Edwards</div>
+                    <div class="text-[10px] text-slate-400">01 Apr / 2026</div>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <div class="text-xs font-extrabold text-slate-800">$2,843</div>
+                  <div class="text-[9px] text-emerald-600 font-semibold">Payment Received</div>
+                </div>
+              </div>
+
+              <!-- 3. Jerome Bell -->
+              <div class="flex items-center justify-between p-2 rounded-xl hover:bg-slate-50 transition-colors">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-full bg-amber-600 text-white flex items-center justify-center font-bold text-xs shadow-sm">
+                    JB
+                  </div>
+                  <div>
+                    <div class="text-xs font-bold text-slate-800">Jerome Bell</div>
+                    <div class="text-[10px] text-slate-400">29 Mar / 2026</div>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <div class="text-xs font-extrabold text-slate-800">$20</div>
+                  <div class="text-[9px] text-slate-400 font-medium">Subscription</div>
+                </div>
+              </div>
+
+            </div>
+
+            <button onclick="openModal('sendMoney')" class="w-full py-1.5 rounded-xl border border-dashed border-slate-300 hover:border-periwinkle-400 text-xs font-bold text-slate-600 hover:text-periwinkle-600 transition-colors flex items-center justify-center gap-1.5">
+              <span>+ New Transaction</span>
+            </button>
+          </div>
+
+          <!-- Expenses & Income + Premium Banner (7 cols) -->
+          <div class="lg:col-span-7 flex flex-col justify-between gap-4">
+            
+            <!-- Expenses & Income Progress Bar Card -->
+            <div class="bank-card p-4 sm:p-5 flex-1 flex flex-col justify-between">
+              <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+                <span class="text-xs font-bold text-slate-800">Expenses & income</span>
+                <span class="text-[10px] text-slate-400 font-semibold">Monthly overview</span>
+              </div>
+
+              <div class="my-3">
+                <div class="flex items-baseline justify-between mb-2">
+                  <div class="flex items-center gap-2">
+                    <span class="text-2xl font-black text-slate-800">60%</span>
+                    <span class="text-xs text-slate-400 font-medium">Expenses ($18,240)</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-2xl font-black text-slate-800">40%</span>
+                    <span class="text-xs text-slate-400 font-medium">Income ($12,160)</span>
+                  </div>
+                </div>
+
+                <!-- Dual Segmented Pill Bar -->
+                <div class="w-full h-3 bg-slate-100 rounded-full overflow-hidden flex shadow-inner">
+                  <div class="h-full bg-[#687DCF] rounded-l-full transition-all duration-700" style="width: 60%"></div>
+                  <div class="h-full bg-amber-400 rounded-r-full transition-all duration-700" style="width: 40%"></div>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between text-[11px] text-slate-400 font-semibold">
+                <span>Budget allocated: $30,400</span>
+                <span class="text-emerald-600 font-bold">Within safe target limits</span>
+              </div>
+            </div>
+
+            <!-- Matte Dark Premium Upgrade Banner -->
+            <div class="bg-[#16181F] text-white rounded-2xl p-4 flex items-center justify-between shadow-xl border border-slate-800 relative overflow-hidden">
+              <div class="flex items-center gap-3 z-10">
+                <div class="w-9 h-9 rounded-xl bg-white/10 text-periwinkle-300 flex items-center justify-center flex-shrink-0">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                  </svg>
+                </div>
+                <div>
+                  <h4 class="text-xs font-bold text-white">More features?</h4>
+                  <p class="text-[11px] text-slate-400">Upgrade your account to unlock the full credit line & 2% cashback.</p>
+                </div>
+              </div>
+
+              <button onclick="openModal('premium')" class="z-10 bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 hover:border-slate-500 font-bold text-xs px-3.5 py-2 rounded-xl transition-all shadow-md flex-shrink-0 ml-3 active:scale-95">
+                Go to premium
+              </button>
+
+              <!-- Subtle decorative gradient ring in background -->
+              <div class="absolute -right-6 -bottom-6 w-32 h-32 rounded-full bg-periwinkle-600/10 pointer-events-none"></div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ================= SECTION 2: CARDS & WALLET ================= -->
+      <div id="view-cards" class="section-view pt-5">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xl font-extrabold text-slate-800">My Cards & Accounts</h2>
+          <button onclick="switchTab('dashboard')" class="text-xs font-bold text-periwinkle-600 hover:underline">← Back to Dashboard</button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="bank-card p-4 border-t-4 border-periwinkle-500">
+            <span class="text-[10px] font-mono text-periwinkle-600 uppercase font-black">Primary Debit</span>
+            <h3 class="text-base font-bold text-slate-800 mt-1">The Bank of Anything</h3>
+            <p class="text-xl font-black text-slate-800 mt-2 font-mono">•••• 2734</p>
+            <div class="text-xs text-slate-400 mt-2">Available: <span class="font-bold text-slate-700">$38,729.61</span></div>
+          </div>
+
+          <div class="bank-card p-4 border-t-4 border-amber-500">
+            <span class="text-[10px] font-mono text-amber-600 uppercase font-black">Virtual Reserve</span>
+            <h3 class="text-base font-bold text-slate-800 mt-1">Relibank Obsidian Card</h3>
+            <p class="text-xl font-black text-slate-800 mt-2 font-mono">•••• 9182</p>
+            <div class="text-xs text-slate-400 mt-2">Available: <span class="font-bold text-slate-700">$14,250.00</span></div>
+          </div>
+
+          <div class="bank-card p-4 border-t-4 border-emerald-500">
+            <span class="text-[10px] font-mono text-emerald-600 uppercase font-black">Savings Pot</span>
+            <h3 class="text-base font-bold text-slate-800 mt-1">High-Yield Treasury</h3>
+            <p class="text-xl font-black text-slate-800 mt-2 font-mono">•••• 4410</p>
+            <div class="text-xs text-slate-400 mt-2">Accrued Interest: <span class="font-bold text-emerald-600">4.85% APY</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= SECTION 3: ANALYTICS ================= -->
+      <div id="view-analytics" class="section-view pt-5">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xl font-extrabold text-slate-800">Financial Growth & Spending Intelligence</h2>
+          <button onclick="switchTab('dashboard')" class="text-xs font-bold text-periwinkle-600 hover:underline">← Back to Dashboard</button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bank-card p-4">
+            <h3 class="text-xs font-bold text-slate-800 mb-2">Category Spending Breakdown</h3>
+            <div class="space-y-2 text-xs">
+              <div class="flex justify-between py-1 border-b border-slate-100">
+                <span class="text-slate-500">Cloud & SaaS Subscriptions</span>
+                <span class="font-extrabold text-slate-800">$4,320.00 (35%)</span>
+              </div>
+              <div class="flex justify-between py-1 border-b border-slate-100">
+                <span class="text-slate-500">Operations & Logistics</span>
+                <span class="font-extrabold text-slate-800">$6,400.00 (45%)</span>
+              </div>
+              <div class="flex justify-between py-1 border-b border-slate-100">
+                <span class="text-slate-500">Marketing & Design</span>
+                <span class="font-extrabold text-slate-800">$2,450.00 (20%)</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="bank-card p-4 flex flex-col justify-between">
+            <h3 class="text-xs font-bold text-slate-800 mb-2">Net Cash Velocity</h3>
+            <p class="text-xs text-slate-500">Inflow increased by +18.4% compared to the previous fiscal quarter.</p>
+            <div class="mt-4 p-3 bg-indigo-50/60 rounded-xl text-xs font-bold text-indigo-700">
+              Audit Status: Fully reconciled with zero discrepancies.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= SECTION 4: TRANSACTIONS ================= -->
+      <div id="view-transactions" class="section-view pt-5">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xl font-extrabold text-slate-800">Transactions Ledger</h2>
+          <button onclick="switchTab('dashboard')" class="text-xs font-bold text-periwinkle-600 hover:underline">← Back to Dashboard</button>
+        </div>
+
+        <div class="bank-card p-4">
+          <table class="w-full text-left text-xs">
+            <thead>
+              <tr class="text-[10px] font-bold uppercase tracking-wider text-slate-400 border-b border-slate-200/80 pb-2">
+                <th class="pb-2">Party</th>
+                <th class="pb-2">Details</th>
+                <th class="pb-2">Date</th>
+                <th class="pb-2 text-right">Amount</th>
+                <th class="pb-2 text-right">Status</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              <tr>
+                <td class="py-2.5 font-bold text-slate-800">Clerxwind Studio</td>
+                <td class="py-2.5 text-slate-500">Design Contract Phase 1</td>
+                <td class="py-2.5 text-slate-400">03 Apr 2026</td>
+                <td class="py-2.5 text-right font-extrabold text-slate-800">$853.00</td>
+                <td class="py-2.5 text-right"><span class="bg-emerald-100 text-emerald-700 text-[10px] px-2 py-0.5 rounded-full font-bold">Settled</span></td>
+              </tr>
+              <tr>
+                <td class="py-2.5 font-bold text-slate-800">Ralph Edwards</td>
+                <td class="py-2.5 text-slate-500">Inbound Retainer Wire</td>
+                <td class="py-2.5 text-slate-400">01 Apr 2026</td>
+                <td class="py-2.5 text-right font-extrabold text-emerald-600">+$2,843.00</td>
+                <td class="py-2.5 text-right"><span class="bg-emerald-100 text-emerald-700 text-[10px] px-2 py-0.5 rounded-full font-bold">Settled</span></td>
+              </tr>
+              <tr>
+                <td class="py-2.5 font-bold text-slate-800">Jerome Bell</td>
+                <td class="py-2.5 text-slate-500">Dev Tool License</td>
+                <td class="py-2.5 text-slate-400">29 Mar 2026</td>
+                <td class="py-2.5 text-right font-extrabold text-slate-800">$20.00</td>
+                <td class="py-2.5 text-right"><span class="bg-blue-100 text-blue-700 text-[10px] px-2 py-0.5 rounded-full font-bold">Direct Debit</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ================= INTERACTIVE MODAL OVERLAY ================= -->
+  <div id="bankingModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white border border-slate-200 rounded-3xl max-w-sm w-full p-5 shadow-2xl relative animate-in fade-in zoom-in-95 duration-200">
+      
+      <button onclick="closeModal()" class="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center absolute top-4 right-4 transition-all">
+        ✕
+      </button>
+
+      <h3 id="modalHeading" class="text-base font-extrabold text-slate-800">Instant Money Transfer</h3>
+      <p id="modalDescription" class="text-xs text-slate-400 mt-1">Zero latency settlement via Relibank direct routing.</p>
+
+      <div class="mt-4 space-y-3">
+        <div>
+          <label class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Select Contact</label>
+          <div class="flex items-center gap-2 mt-1">
+            <span class="w-8 h-8 rounded-full bg-amber-500 text-white text-xs font-black flex items-center justify-center ring-2 ring-periwinkle-400">AK</span>
+            <input type="text" value="Alif's Colleague (AK - Alex King)" class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs text-slate-700 font-semibold focus:outline-none focus:border-periwinkle-400">
+          </div>
+        </div>
+
+        <div>
+          <label class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Amount ($ USD)</label>
+          <input type="number" value="250" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-800 font-mono font-bold mt-1 focus:outline-none focus:border-periwinkle-400">
+        </div>
+      </div>
+
+      <div class="mt-5 flex items-center justify-end gap-2">
+        <button onclick="closeModal()" class="px-3.5 py-1.5 rounded-full text-xs font-bold text-slate-500 hover:text-slate-800">Cancel</button>
+        <button onclick="confirmTransaction()" class="px-4 py-1.5 rounded-full text-xs font-extrabold text-white bg-[#687DCF] hover:bg-[#586CBF] shadow-md transition-all active:scale-95">Send Now</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // 1. Navigation Tab Switching (Dashboard, Cards, Analytics, Transactions)
+    function switchTab(targetTab) {
+      const tabs = ['dashboard', 'cards', 'analytics', 'transactions'];
+
+      tabs.forEach(t => {
+        const viewEl = document.getElementById(`view-${t}`);
+        const navBtn = document.getElementById(`nav-btn-${t}`);
+
+        if (t === targetTab) {
+          if (viewEl) viewEl.classList.add('active-view');
+          if (navBtn) {
+            navBtn.className = 'w-11 h-11 rounded-xl bg-white/10 text-white flex items-center justify-center transition-all group relative';
+            const icon = navBtn.querySelector('svg');
+            if (icon) icon.setAttribute('class', 'w-5 h-5 text-periwinkle-300');
+          }
+        } else {
+          if (viewEl) viewEl.classList.remove('active-view');
+          if (navBtn) {
+            navBtn.className = 'w-11 h-11 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 flex items-center justify-center transition-all group relative';
+            const icon = navBtn.querySelector('svg');
+            if (icon) icon.setAttribute('class', 'w-5 h-5');
+          }
+        }
+      });
+    }
+
+    // 2. Interactive 3D Card Flip (Front / Back)
+    let cardFlipped = false;
+    function toggleCardFlip() {
+      const flipper = document.getElementById('flipperCard');
+      if (!flipper) return;
+
+      cardFlipped = !cardFlipped;
+      if (cardFlipped) {
+        flipper.classList.add('is-flipped');
+      } else {
+        flipper.classList.remove('is-flipped');
+      }
+    }
+
+    // 3. Dynamic Cursor Spotlight & 3D Perspective Tilt on Hover
+    function setupCard3DEffects() {
+      const cards = document.querySelectorAll('.bank-card');
+
+      cards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+
+          card.style.setProperty('--mouse-x', `${x}px`);
+          card.style.setProperty('--mouse-y', `${y}px`);
+
+          // 3D Tilt calculation
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+          const rotateX = ((y - centerY) / centerY) * -2.5;
+          const rotateY = ((x - centerX) / centerX) * 2.5;
+
+          card.style.transform = `perspective(900px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(-2px)`;
+        });
+
+        card.addEventListener('mouseleave', () => {
+          card.style.transform = `perspective(900px) rotateX(0deg) rotateY(0deg) translateY(0px)`;
+        });
+      });
+    }
+
+    // 4. Modal Interactions
+    function openModal(type) {
+      const modal = document.getElementById('bankingModal');
+      const heading = document.getElementById('modalHeading');
+      const desc = document.getElementById('modalDescription');
+      if (!modal) return;
+
+      if (type === 'sendMoney') {
+        heading.textContent = 'Instant Money Transfer';
+        desc.textContent = 'Transfer funds securely to your contacts without gas or wire fees.';
+      } else if (type === 'premium') {
+        heading.textContent = 'Relibank Elite Premium';
+        desc.textContent = 'Unlock 2% instant cashback, $100k credit lines, and concierges.';
+      }
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('bankingModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function confirmTransaction() {
+      closeModal();
+    }
+
+    // Run setup on load
+    window.addEventListener('load', () => {
+      setupCard3DEffects();
+    });
+  </script>
+
+</body>
+</html>

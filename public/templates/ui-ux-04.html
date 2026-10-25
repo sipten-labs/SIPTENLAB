@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>People Directory — Hello Valentina</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            cream: {
+              50: '#FAF8F3',
+              100: '#F6F3EC',
+              200: '#EDE8DE',
+              300: '#E1D9CA',
+            },
+            amberAccent: {
+              400: '#FCD34D',
+              500: '#F5B718',
+              600: '#E29E0B',
+              soft: '#FCE7B8'
+            },
+            charcoal: {
+              800: '#232524',
+              900: '#161817',
+              dark: '#111212'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      user-select: none;
+    }
+
+    body {
+      background: radial-gradient(circle at 50% 15%, #FAF7F0 0%, #EFEAE0 100%);
+      color: #171818;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* 3D Bento Card Base with Specular Cursor Glow */
+    .bento-card {
+      position: relative;
+      border-radius: 22px;
+      transition: transform 0.22s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+      will-change: transform;
+      background: rgba(255, 255, 255, 0.72);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      box-shadow: 0 10px 25px -10px rgba(50, 45, 35, 0.06), 0 2px 6px -2px rgba(50, 45, 35, 0.03);
+    }
+
+    /* Dark card variant */
+    .bento-card-dark {
+      background: #171817;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 16px 36px -12px rgba(0, 0, 0, 0.45);
+    }
+
+    /* Dynamic cursor spotlight glow */
+    .bento-card::before {
+      content: '';
+      position: absolute;
+      top: var(--mouse-y, -150px);
+      left: var(--mouse-x, -150px);
+      width: 240px;
+      height: 240px;
+      background: radial-gradient(circle closest-side, rgba(245, 183, 24, 0.18), transparent 75%);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      border-radius: 9999px;
+      z-index: 10;
+    }
+
+    .bento-card-dark::before {
+      background: radial-gradient(circle closest-side, rgba(245, 183, 24, 0.28), transparent 80%);
+    }
+
+    .bento-card:hover::before {
+      opacity: 1;
+    }
+
+    /* Attendance matrix grid dots */
+    .dot-matrix {
+      display: grid;
+      grid-template-columns: repeat(14, minmax(0, 1fr));
+      gap: 5px;
+    }
+
+    .dot-node {
+      width: 8.5px;
+      height: 8.5px;
+      border-radius: 50%;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+      cursor: pointer;
+    }
+
+    .dot-node:hover {
+      transform: scale(1.6);
+      z-index: 10;
+      box-shadow: 0 0 12px currentColor;
+    }
+
+    /* Custom scroll bar */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+
+<body class="p-2 sm:p-4 md:p-6 flex items-center justify-center">
+
+  <div class="w-full max-w-[1300px] bg-[#F7F4ED]/95 backdrop-blur-xl rounded-[32px] border border-white/80 p-3 sm:p-5 md:p-6 shadow-2xl relative">
+
+    <!-- TOP NAVIGATION BAR -->
+    <header class="flex items-center justify-between gap-3 mb-4">
+      
+      <!-- Brand Pill -->
+      <div class="flex items-center gap-2">
+        <span class="bg-[#1A1C1B] text-white px-4 py-1.5 rounded-full font-extrabold text-[11px] tracking-wider uppercase shadow-md flex items-center gap-2">
+          <span class="w-1.5 h-1.5 rounded-full bg-amberAccent-500 animate-pulse"></span>
+          PEOPLE
+        </span>
+      </div>
+
+      <!-- Segmented Nav Pills (Centered) -->
+      <nav class="hidden md:flex items-center gap-1 bg-[#ECE7DC] p-1 rounded-full border border-black/5 shadow-inner text-xs font-semibold">
+        <button class="bg-[#181919] text-white px-3.5 py-1.5 rounded-full shadow-sm transition-all">Dashboard</button>
+        <button class="text-[#555855] hover:text-[#161717] px-3 py-1.5 rounded-full hover:bg-black/5 transition-all">People</button>
+        <button class="text-[#555855] hover:text-[#161717] px-3 py-1.5 rounded-full hover:bg-black/5 transition-all">Hiring</button>
+        <button class="text-[#555855] hover:text-[#161717] px-3 py-1.5 rounded-full hover:bg-black/5 transition-all">Devices</button>
+        <button class="text-[#555855] hover:text-[#161717] px-3 py-1.5 rounded-full hover:bg-black/5 transition-all">Apps</button>
+        <button class="text-[#555855] hover:text-[#161717] px-3 py-1.5 rounded-full hover:bg-black/5 transition-all">Salary</button>
+        <button class="text-[#555855] hover:text-[#161717] px-3 py-1.5 rounded-full hover:bg-black/5 transition-all">Calendar</button>
+        <button class="text-[#555855] hover:text-[#161717] px-3 py-1.5 rounded-full hover:bg-black/5 transition-all">Reviews</button>
+      </nav>
+
+      <!-- Right Utility Actions -->
+      <div class="flex items-center gap-2">
+        <button class="w-8 h-8 rounded-full bg-white/70 hover:bg-white border border-black/5 flex items-center justify-center text-[#222423] shadow-xs active:scale-95 transition-all">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+        </button>
+        <button class="w-8 h-8 rounded-full bg-[#E5B537] text-[#141514] font-black text-xs flex items-center justify-center shadow-xs active:scale-95 transition-all">
+          V
+        </button>
+        <button class="w-8 h-8 rounded-full bg-[#181919] hover:bg-black text-white flex items-center justify-center shadow-sm active:scale-95 transition-all" title="Close Window">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+    </header>
+
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-4 pt-1">
+      <div>
+        <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-[#171918]">
+          Hello Valentina
+        </h1>
+        <p class="text-xs font-semibold text-[#737873] mt-0.5">Workforce overview & team progression for Q3</p>
+      </div>
+
+      <!-- Top 3 Stat Counter Pills -->
+      <div class="flex items-center gap-6 sm:gap-9">
+        <div class="flex items-baseline gap-2">
+          <span class="text-2xl sm:text-3xl font-black text-[#151616]">91</span>
+          <span class="text-[11px] font-bold text-[#6D726D] uppercase tracking-wide">Employees</span>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <span class="text-2xl sm:text-3xl font-black text-[#151616]">104</span>
+          <span class="text-[11px] font-bold text-[#6D726D] uppercase tracking-wide">Open roles</span>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <span class="text-2xl sm:text-3xl font-black text-[#151616]">185</span>
+          <span class="text-[11px] font-bold text-[#6D726D] uppercase tracking-wide">Projects</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-5 bg-white/60 p-2 rounded-2xl border border-black/5">
+      <!-- Continuous Multi-segmented bar -->
+      <div class="h-6 w-full flex rounded-full overflow-hidden p-0.5 bg-[#E8E2D5] shadow-inner gap-1">
+        <!-- Interviews: 70% (Black) -->
+        <div class="h-full bg-[#161717] rounded-full flex items-center justify-center text-[10px] font-bold text-white tracking-wide transition-all hover:brightness-125 cursor-pointer" style="width: 70%;">
+          70%
+        </div>
+        <!-- Hired: 15% (Amber) -->
+        <div class="h-full bg-[#F5B718] rounded-full flex items-center justify-center text-[10px] font-black text-[#181918] tracking-wide transition-all hover:brightness-110 cursor-pointer" style="width: 15%;">
+          15%
+        </div>
+        <!-- Probations: 10% (Striped Cream) -->
+        <div class="h-full bg-[#DDD6C5] rounded-full flex items-center justify-center text-[10px] font-bold text-[#3B3D3B] tracking-wide transition-all hover:brightness-110 cursor-pointer" style="width: 10%;">
+          10%
+        </div>
+        <!-- Closed: 5% (Muted) -->
+        <div class="h-full bg-[#C7C0AF] rounded-full flex items-center justify-center text-[10px] font-bold text-[#444644] tracking-wide transition-all hover:brightness-110 cursor-pointer" style="width: 5%;">
+          5%
+        </div>
+      </div>
+
+      <!-- Segment Subtitles -->
+      <div class="flex justify-between items-center px-2 pt-1.5 text-[10px] font-bold text-[#6A706A]">
+        <span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-[#161717]"></span> Interviews (70%)</span>
+        <span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-[#F5B718]"></span> Hired (15%)</span>
+        <span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-[#DDD6C5]"></span> Probation (10%)</span>
+        <span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-[#C7C0AF]"></span> Closed (5%)</span>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
+
+      <!-- ================= LEFT COLUMN: SCHEDULE WIDGET (3 COLS) ================= -->
+      <div class="lg:col-span-3 flex flex-col gap-3.5">
+        
+        <div class="bento-card p-4 rounded-[24px] flex flex-col justify-between flex-1">
+          <div>
+            <!-- Header -->
+            <div class="flex items-center justify-between pb-3">
+              <h3 class="text-sm font-extrabold text-[#151716] tracking-tight">Schedule</h3>
+              <button class="w-6 h-6 rounded-full bg-black/5 hover:bg-black/10 flex items-center justify-center text-[#313532] transition-colors">
+                <svg class="w-3 h-3 -rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+              </button>
+            </div>
+
+            <!-- Mini Day Selector (22 to 28) -->
+            <div class="grid grid-cols-7 gap-1 text-center py-1 border-b border-black/5" id="schedule-days">
+              <div class="flex flex-col items-center py-1 cursor-pointer hover:bg-black/5 rounded-lg transition-all">
+                <span class="text-[9px] font-bold text-[#8A908A]">Su</span>
+                <span class="text-xs font-bold text-[#1B1D1C]">22</span>
+              </div>
+              <div class="flex flex-col items-center py-1 cursor-pointer hover:bg-black/5 rounded-lg transition-all">
+                <span class="text-[9px] font-bold text-[#8A908A]">Mo</span>
+                <span class="text-xs font-bold text-[#1B1D1C]">23</span>
+              </div>
+              <div class="flex flex-col items-center py-1 cursor-pointer hover:bg-black/5 rounded-lg transition-all">
+                <span class="text-[9px] font-bold text-[#8A908A]">Tu</span>
+                <span class="text-xs font-bold text-[#1B1D1C]">24</span>
+              </div>
+              <!-- Active Highlighted Day (25) -->
+              <div class="flex flex-col items-center py-1 bg-[#161717] text-white rounded-xl shadow-xs cursor-pointer">
+                <span class="text-[9px] font-bold text-amberAccent-400">We</span>
+                <span class="text-xs font-extrabold text-white">25</span>
+              </div>
+              <div class="flex flex-col items-center py-1 cursor-pointer hover:bg-black/5 rounded-lg transition-all">
+                <span class="text-[9px] font-bold text-[#8A908A]">Th</span>
+                <span class="text-xs font-bold text-[#1B1D1C]">26</span>
+              </div>
+              <div class="flex flex-col items-center py-1 cursor-pointer hover:bg-black/5 rounded-lg transition-all">
+                <span class="text-[9px] font-bold text-[#8A908A]">Fr</span>
+                <span class="text-xs font-bold text-[#1B1D1C]">27</span>
+              </div>
+              <div class="flex flex-col items-center py-1 cursor-pointer hover:bg-black/5 rounded-lg transition-all">
+                <span class="text-[9px] font-bold text-[#8A908A]">Sa</span>
+                <span class="text-xs font-bold text-[#1B1D1C]">28</span>
+              </div>
+            </div>
+
+            <!-- Schedule Items Flow -->
+            <div class="mt-4 space-y-2.5">
+              
+              <!-- Slot 1: Daily Sync (Dark Active Card) -->
+              <div class="bg-[#181919] text-white p-3 rounded-2xl shadow-sm hover:translate-x-1 transition-transform cursor-pointer">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-bold text-white">Daily sync</span>
+                  <span class="w-4 h-4 rounded-full bg-amberAccent-500 text-black text-[9px] font-black flex items-center justify-center">1</span>
+                </div>
+                <div class="text-[10px] text-white/60 font-medium mt-1">
+                  09:30 am — 10:00 am
+                </div>
+              </div>
+
+              <!-- Slot 2: Task review with team -->
+              <div class="bg-[#EFE9DC]/80 hover:bg-[#EAE2D2] border border-black/5 p-3 rounded-2xl transition-all cursor-pointer">
+                <div class="text-xs font-bold text-[#1B1D1C]">Task review with team</div>
+                <div class="text-[10px] text-[#717771] font-medium mt-1">
+                  11:00 am — 12:15 pm
+                </div>
+              </div>
+
+              <!-- Slot 3: Daily meeting with avatar pill -->
+              <div class="bg-[#EADDBF]/70 hover:bg-[#E5D5B2] border border-[#DECDA2] p-3 rounded-2xl transition-all cursor-pointer flex items-center justify-between">
+                <div>
+                  <div class="text-xs font-bold text-[#232624]">Daily meeting</div>
+                  <div class="text-[10px] text-[#69665B] font-medium mt-1">12:30 pm — 01:00 pm</div>
+                </div>
+                <div class="flex -space-x-1.5">
+                  <span class="w-5 h-5 rounded-full bg-amberAccent-500 border border-white flex items-center justify-center text-[8px] font-black">VR</span>
+                  <span class="w-5 h-5 rounded-full bg-blue-600 border border-white flex items-center justify-center text-[8px] font-black text-white">MS</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="mt-4 pt-2 border-t border-black/5 flex items-center justify-between text-[11px] font-semibold text-[#6C716C]">
+            <span>Next: Design Review</span>
+            <span class="text-[#171918] font-bold">02:30 PM</span>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ================= CENTER COLUMN: SALARY TABLE & HIRING CHART (6 COLS) ================= -->
+      <div class="lg:col-span-6 flex flex-col gap-3.5">
+        
+        <div class="bento-card p-4 rounded-[24px]">
+          <!-- Table Header & Filter -->
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-sm font-extrabold text-[#151716] tracking-tight">Salary</h3>
+            
+            <!-- Quick Search Input -->
+            <div class="relative w-44">
+              <input 
+                type="text" 
+                id="salary-search"
+                placeholder="Search..." 
+                class="w-full bg-[#EFE9DD] border border-black/5 rounded-full py-1 pl-7 pr-3 text-xs font-medium text-[#1A1C1B] focus:outline-none focus:ring-1 focus:ring-amberAccent-500 transition-all placeholder-[#8A8F8A]"
+              >
+              <svg class="w-3.5 h-3.5 absolute left-2.5 top-1.5 text-[#727772]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            </div>
+          </div>
+
+          <!-- Table Content -->
+          <div class="overflow-x-auto no-scrollbar">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr class="text-[10px] uppercase font-bold text-[#868C86] border-b border-black/5">
+                  <th class="pb-2 w-6"></th>
+                  <th class="pb-2">Name</th>
+                  <th class="pb-2">Job title</th>
+                  <th class="pb-2">Net salary</th>
+                  <th class="pb-2 text-right">Status</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-black/5" id="salary-rows">
+                
+                <!-- Row 1: Yulia Polishchuk -->
+                <tr class="hover:bg-black/[0.02] transition-colors cursor-pointer group">
+                  <td class="py-2.5">
+                    <input type="checkbox" checked class="accent-[#161717] rounded cursor-pointer">
+                  </td>
+                  <td class="py-2.5 flex items-center gap-2">
+                    <div class="w-6 h-6 rounded-full bg-amber-500/20 text-[#B87E00] flex items-center justify-center font-bold text-[10px]">YP</div>
+                    <span class="font-bold text-[#141514]">Yulia Polishchuk</span>
+                  </td>
+                  <td class="py-2.5 text-[#595E59] font-medium">Head of design</td>
+                  <td class="py-2.5 font-bold text-[#141514]">$2,500</td>
+                  <td class="py-2.5 text-right">
+                    <span class="bg-[#D2EBD9] text-[#1E6B35] px-2 py-0.5 rounded-md font-bold text-[10px]">Paid</span>
+                  </td>
+                </tr>
+
+                <!-- Row 2: Bogdan Nikitin -->
+                <tr class="hover:bg-black/[0.02] transition-colors cursor-pointer group">
+                  <td class="py-2.5">
+                    <input type="checkbox" class="accent-[#161717] rounded cursor-pointer">
+                  </td>
+                  <td class="py-2.5 flex items-center gap-2">
+                    <div class="w-6 h-6 rounded-full bg-blue-500/20 text-blue-700 flex items-center justify-center font-bold text-[10px]">BN</div>
+                    <span class="font-bold text-[#141514]">Bogdan Nikitin</span>
+                  </td>
+                  <td class="py-2.5 text-[#595E59] font-medium">Front-end dev</td>
+                  <td class="py-2.5 font-bold text-[#141514]">$3,000</td>
+                  <td class="py-2.5 text-right">
+                    <span class="bg-[#FBE0DD] text-[#C0392B] px-2 py-0.5 rounded-md font-bold text-[10px]">Absent</span>
+                  </td>
+                </tr>
+
+                <!-- Row 3: Daria Yurchenko -->
+                <tr class="hover:bg-black/[0.02] transition-colors cursor-pointer group">
+                  <td class="py-2.5">
+                    <input type="checkbox" class="accent-[#161717] rounded cursor-pointer">
+                  </td>
+                  <td class="py-2.5 flex items-center gap-2">
+                    <div class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-700 flex items-center justify-center font-bold text-[10px]">DY</div>
+                    <span class="font-bold text-[#141514]">Daria Yurchenko</span>
+                  </td>
+                  <td class="py-2.5 text-[#595E59] font-medium">Product designer</td>
+                  <td class="py-2.5 font-bold text-[#141514]">$1,500</td>
+                  <td class="py-2.5 text-right">
+                    <span class="bg-[#FFF0C2] text-[#A67800] px-2 py-0.5 rounded-md font-bold text-[10px]">Pending</span>
+                  </td>
+                </tr>
+
+                <!-- Row 4: Marek Doval -->
+                <tr class="hover:bg-black/[0.02] transition-colors cursor-pointer group">
+                  <td class="py-2.5">
+                    <input type="checkbox" checked class="accent-[#161717] rounded cursor-pointer">
+                  </td>
+                  <td class="py-2.5 flex items-center gap-2">
+                    <div class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-700 flex items-center justify-center font-bold text-[10px]">MD</div>
+                    <span class="font-bold text-[#141514]">Marek Doval</span>
+                  </td>
+                  <td class="py-2.5 text-[#595E59] font-medium">Data analyst</td>
+                  <td class="py-2.5 font-bold text-[#141514]">$2,200</td>
+                  <td class="py-2.5 text-right">
+                    <span class="bg-[#D2EBD9] text-[#1E6B35] px-2 py-0.5 rounded-md font-bold text-[10px]">Paid</span>
+                  </td>
+                </tr>
+
+                <!-- Row 5: Inna Samoila -->
+                <tr class="hover:bg-black/[0.02] transition-colors cursor-pointer group">
+                  <td class="py-2.5">
+                    <input type="checkbox" checked class="accent-[#161717] rounded cursor-pointer">
+                  </td>
+                  <td class="py-2.5 flex items-center gap-2">
+                    <div class="w-6 h-6 rounded-full bg-orange-500/20 text-orange-700 flex items-center justify-center font-bold text-[10px]">IS</div>
+                    <span class="font-bold text-[#141514]">Inna Samoila</span>
+                  </td>
+                  <td class="py-2.5 text-[#595E59] font-medium">QA engineer</td>
+                  <td class="py-2.5 font-bold text-[#141514]">$1,840</td>
+                  <td class="py-2.5 text-right">
+                    <span class="bg-[#D2EBD9] text-[#1E6B35] px-2 py-0.5 rounded-md font-bold text-[10px]">Paid</span>
+                  </td>
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="bento-card p-4 rounded-[24px] relative">
+          <!-- Chart Header -->
+          <div class="flex items-center justify-between mb-2">
+            <h3 class="text-sm font-extrabold text-[#151716] tracking-tight">Hiring statistics</h3>
+            <div class="flex items-center gap-3 text-[10px] font-bold text-[#6D726D]">
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#181919]"></span> Offers</span>
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amberAccent-500"></span> Budget</span>
+            </div>
+          </div>
+
+          <!-- Interactive SVG Line Curves with Tooltip -->
+          <div class="relative w-full h-32" id="chart-container">
+            <!-- Dynamic Hover Tooltip -->
+            <div id="chart-tooltip" class="absolute hidden bg-[#141514] text-white text-[10px] font-bold px-2 py-1 rounded-md shadow-lg pointer-events-none transform -translate-x-1/2 -translate-y-full z-20">
+              Offers: 42
+            </div>
+
+            <svg class="w-full h-full overflow-visible" viewBox="0 0 500 120" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="offersGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#181919" stop-opacity="0.12"/>
+                  <stop offset="100%" stop-color="#181919" stop-opacity="0.0"/>
+                </linearGradient>
+              </defs>
+
+              <!-- Subtle Grid horizontal lines -->
+              <line x1="0" y1="30" x2="500" y2="30" stroke="rgba(0,0,0,0.04)" stroke-width="1" />
+              <line x1="0" y1="70" x2="500" y2="70" stroke="rgba(0,0,0,0.04)" stroke-width="1" />
+              <line x1="0" y1="105" x2="500" y2="105" stroke="rgba(0,0,0,0.04)" stroke-width="1" />
+
+              <!-- Offer Curve (Charcoal Smooth) -->
+              <path 
+                d="M 10 95 C 70 90, 110 75, 170 70 C 230 65, 270 78, 330 62 C 390 48, 440 38, 490 35" 
+                fill="none" 
+                stroke="#181919" 
+                stroke-width="2.5" 
+                stroke-linecap="round"
+              />
+
+              <!-- Budget Curve (Amber Yellow Smooth) -->
+              <path 
+                d="M 10 102 C 60 100, 110 82, 170 85 C 230 88, 270 65, 330 68 C 390 70, 440 76, 490 73" 
+                fill="none" 
+                stroke="#F5B718" 
+                stroke-width="2.5" 
+                stroke-linecap="round"
+              />
+
+              <!-- Interactive Highlight Marker Dot -->
+              <circle cx="280" cy="74" r="5" fill="#181919" stroke="#FFFFFF" stroke-width="2" class="cursor-pointer hover:scale-125 transition-transform" />
+            </svg>
+          </div>
+
+          <!-- Chart X-Axis Months -->
+          <div class="flex justify-between items-center text-[9px] font-bold text-[#868C86] pt-1">
+            <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span><span>Nov</span>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ================= RIGHT COLUMN: ATTENDANCE & COMPOSITION (3 COLS) ================= -->
+      <div class="lg:col-span-3 flex flex-col gap-3.5">
+        
+        <div class="bento-card bento-card-dark p-4 rounded-[24px] text-white flex flex-col justify-between">
+          <div>
+            <!-- Header -->
+            <div class="flex items-center justify-between pb-2">
+              <h3 class="text-xs font-bold text-white/90">Attendance report</h3>
+              <button class="w-5 h-5 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white/70 transition-colors">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+              </button>
+            </div>
+
+            <!-- Numbers Counter with indicator arrow -->
+            <div class="flex items-center gap-3 my-2">
+              <div class="flex items-baseline gap-1">
+                <span class="text-2xl font-black text-white">63</span>
+                <span class="text-amberAccent-400 text-xs">▲</span>
+              </div>
+              <div class="flex items-baseline gap-1">
+                <span class="text-2xl font-black text-white/60">12</span>
+                <span class="text-white/40 text-xs">▼</span>
+              </div>
+            </div>
+
+            <!-- 14x6 Dot Matrix of interactive team status -->
+            <div class="dot-matrix mt-3 py-1" id="attendance-matrix">
+              <!-- Dynamically populated via JavaScript for clean grid -->
+            </div>
+          </div>
+
+          <!-- Bottom Legend -->
+          <div class="mt-3 pt-2 border-t border-white/10 flex items-center justify-between text-[10px] text-white/60">
+            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amberAccent-500"></span> In Office</span>
+            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#2C2E2D]"></span> Remote</span>
+          </div>
+        </div>
+
+        <div class="bento-card p-4 rounded-[24px] flex flex-col justify-between">
+          <div class="flex items-center justify-between mb-2">
+            <h3 class="text-xs font-extrabold text-[#151716] tracking-tight">Employee composition</h3>
+          </div>
+
+          <!-- SVG Donut Chart with 345 in Center -->
+          <div class="relative w-36 h-36 mx-auto my-1 flex items-center justify-center">
+            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+              <!-- Background Ring -->
+              <circle cx="50" cy="50" r="38" stroke="#E9E2D3" stroke-width="11" fill="none" />
+              
+              <!-- Dark Segment (Charcoal) - 68% -->
+              <circle 
+                cx="50" cy="50" r="38" 
+                stroke="#181919" 
+                stroke-width="11" 
+                stroke-dasharray="238.7" 
+                stroke-dashoffset="76" 
+                stroke-linecap="round"
+                fill="none" 
+              />
+
+              <!-- Amber Segment - 22% -->
+              <circle 
+                cx="50" cy="50" r="38" 
+                stroke="#F5B718" 
+                stroke-width="11" 
+                stroke-dasharray="238.7" 
+                stroke-dashoffset="195" 
+                stroke-linecap="round"
+                fill="none" 
+              />
+            </svg>
+
+            <!-- Center Metric -->
+            <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+              <span class="text-2xl font-black text-[#151716] leading-none">345</span>
+              <span class="text-[9px] font-bold text-[#7E847E] uppercase mt-0.5">Total</span>
+            </div>
+          </div>
+
+          <!-- Composition Legend -->
+          <div class="flex items-center justify-center gap-4 text-[10px] font-bold text-[#646A64] mt-1 pt-2 border-t border-black/5">
+            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#181919]"></span> 70% Full-time</span>
+            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amberAccent-500"></span> 30% Contract</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <footer class="mt-4 pt-3 border-t border-black/5 flex flex-wrap items-center justify-between text-[11px] font-medium text-[#7C837C]">
+      <div class="flex items-center gap-2">
+        <span class="font-bold text-[#141514]">Personal & client use</span>
+        <span>•</span>
+        <span>People Directory System v2.4</span>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <span class="hover:text-black cursor-pointer transition-colors">Export CSV</span>
+        <span>•</span>
+        <span class="hover:text-black cursor-pointer transition-colors">Permissions</span>
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+    // 1. Initialize Attendance Matrix Grid (14x6 = 84 dots)
+    function initAttendanceMatrix() {
+      const container = document.getElementById('attendance-matrix');
+      if (!container) return;
+
+      const totalDots = 70; // compact 14 x 5
+      // Mostly yellow dots with some charcoal ones
+      for (let i = 0; i < totalDots; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'dot-node';
+
+        // 75% probability of present (Yellow), 25% remote/absent (Dark charcoal)
+        const isPresent = Math.random() > 0.28;
+        if (isPresent) {
+          dot.style.backgroundColor = '#F5B718';
+          dot.title = `Employee #${i + 1}: Present (In Office)`;
+        } else {
+          dot.style.backgroundColor = '#2E312F';
+          dot.title = `Employee #${i + 1}: Remote / Absent`;
+        }
+
+        container.appendChild(dot);
+      }
+    }
+
+    // 2. Dynamic 3D Card Tilt & Cursor Spotlight Glow
+    function initCardInteractions() {
+      const cards = document.querySelectorAll('.bento-card');
+
+      cards.forEach((card) => {
+        card.addEventListener('mousemove', (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+
+          card.style.setProperty('--mouse-x', `${x}px`);
+          card.style.setProperty('--mouse-y', `${y}px`);
+
+          // 3D Tilt calculation
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+          const rotateX = ((y - centerY) / centerY) * -2.8;
+          const rotateY = ((x - centerX) / centerX) * 2.8;
+
+          card.style.transform = `perspective(700px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(-2px)`;
+        });
+
+        card.addEventListener('mouseleave', () => {
+          card.style.transform = `perspective(700px) rotateX(0deg) rotateY(0deg) translateY(0px)`;
+        });
+      });
+    }
+
+    // 3. Search Filter in Salary Table
+    function initSalarySearch() {
+      const searchInput = document.getElementById('salary-search');
+      const tableRows = document.querySelectorAll('#salary-rows tr');
+
+      if (!searchInput) return;
+
+      searchInput.addEventListener('input', (e) => {
+        const term = e.target.value.toLowerCase();
+        tableRows.forEach(row => {
+          const text = row.innerText.toLowerCase();
+          row.style.display = text.includes(term) ? '' : 'none';
+        });
+      });
+    }
+
+    // 4. Interactive Schedule Day Selector
+    function initScheduleSelector() {
+      const dayContainer = document.getElementById('schedule-days');
+      if (!dayContainer) return;
+
+      const days = dayContainer.children;
+      Array.from(days).forEach(day => {
+        day.addEventListener('click', () => {
+          // Reset previous active
+          Array.from(days).forEach(d => {
+            d.className = 'flex flex-col items-center py-1 cursor-pointer hover:bg-black/5 rounded-lg transition-all';
+            const sub = d.querySelector('span:first-child');
+            const num = d.querySelector('span:last-child');
+            if (sub) sub.className = 'text-[9px] font-bold text-[#8A908A]';
+            if (num) num.className = 'text-xs font-bold text-[#1B1D1C]';
+          });
+
+          // Activate new
+          day.className = 'flex flex-col items-center py-1 bg-[#161717] text-white rounded-xl shadow-xs cursor-pointer';
+          const sub = day.querySelector('span:first-child');
+          const num = day.querySelector('span:last-child');
+          if (sub) sub.className = 'text-[9px] font-bold text-amberAccent-400';
+          if (num) num.className = 'text-xs font-extrabold text-white';
+        });
+      });
+    }
+
+    // Initialize all components on load
+    window.addEventListener('load', () => {
+      initAttendanceMatrix();
+      initCardInteractions();
+      initSalarySearch();
+      initScheduleSelector();
+    });
+  </script>
+</body>
+</html>

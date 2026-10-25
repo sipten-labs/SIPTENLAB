@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Footer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#05040c; --violet:#7c5cff; --magenta:#ff4fd8; --ink:#f1eeff; --muted:#9a95bb; --line:rgba(160,140,255,.16);
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px); color-scheme:dark;
+}
+html{height:100%}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:'DM Sans',system-ui,sans-serif;line-height:1.6;display:flex;flex-direction:column;justify-content:flex-end}
+.demo{flex:1;min-height:30vh}
+footer{position:relative;overflow:hidden;padding:96px 24px 0;
+  background:radial-gradient(60% 40% at 50% 0,rgba(124,92,255,.22),transparent 70%),radial-gradient(70% 45% at 50% 108%,rgba(255,79,216,.45),rgba(124,92,255,.25) 45%,transparent 75%),var(--bg);
+  border-top:1px solid var(--line)}
+footer::before{content:"";position:absolute;left:8%;right:8%;top:-1px;height:2px;background:linear-gradient(90deg,transparent,var(--violet),var(--magenta),var(--violet),transparent);filter:drop-shadow(0 0 10px var(--magenta))}
+.wrap{position:relative;z-index:2;max-width:1120px;margin:0 auto}
+/* CTA card */
+.stage{perspective:1500px;margin-bottom:80px}
+.cta{position:relative;transform-style:preserve-3d;transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .4s ease-out}
+.cta.live{transition:transform .08s linear}
+.cta::before{content:"";position:absolute;inset:18px 30px -14px;border-radius:32px;background:linear-gradient(90deg,var(--violet),var(--magenta));filter:blur(46px);opacity:.5;transform:translateZ(-50px)}
+.cface{position:relative;display:grid;grid-template-columns:1.1fr 1fr;gap:32px;align-items:center;padding:44px;border-radius:30px;overflow:hidden;
+  background:linear-gradient(150deg,rgba(60,40,140,.75),rgba(14,10,36,.92) 70%);border:1px solid rgba(190,170,255,.28);
+  box-shadow:0 1px 0 rgba(255,255,255,.16) inset,0 40px 70px -30px rgba(0,0,0,.95)}
+.cface::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(420px circle at var(--mx,30%) var(--my,0%),rgba(255,255,255,.12),transparent 60%)}
+.cface>*{position:relative;z-index:1;transform:translateZ(34px)}
+.cface h2{font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:700;font-size:clamp(1.7rem,3.4vw,2.5rem);line-height:1.08;letter-spacing:-.02em;margin:0 0 10px}
+.cface p{margin:0;color:var(--muted);max-width:38ch}
+form{display:flex;gap:10px;padding:8px;border-radius:18px;background:rgba(5,4,12,.65);border:1px solid var(--line);box-shadow:0 4px 12px rgba(0,0,0,.5) inset}
+input{flex:1;min-width:0;font:inherit;color:var(--ink);background:none;border:0;padding:12px 14px;border-radius:12px}
+input::placeholder{color:#6f6a94}
+input:focus-visible{outline:2px solid var(--violet);outline-offset:0}
+button.go{font:inherit;font-weight:500;color:#fff;cursor:pointer;border:0;padding:13px 22px;border-radius:12px;white-space:nowrap;
+  background:linear-gradient(180deg,#9b80ff,var(--violet));box-shadow:0 1px 0 rgba(255,255,255,.4) inset,0 5px 0 #4a30b8,0 14px 24px -6px rgba(124,92,255,.7);transition:transform .12s,box-shadow .12s}
+button.go:hover{transform:translateY(-2px)}
+button.go:active{transform:translateY(4px);box-shadow:0 1px 0 rgba(255,255,255,.4) inset,0 1px 0 #4a30b8,0 6px 12px -4px rgba(124,92,255,.6)}
+button.go:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.msg{min-height:1.4em;margin:10px 4px 0;font-size:.9rem;color:#c9b8ff}
+/* links */
+.cols{display:grid;grid-template-columns:1.5fr repeat(3,1fr);gap:40px;padding-bottom:56px}
+.brand{display:flex;align-items:center;gap:12px;font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:700;font-size:1.3rem;margin-bottom:14px}
+.gem{width:38px;height:38px;filter:drop-shadow(0 0 12px rgba(255,79,216,.7))}
+.about{color:var(--muted);max-width:32ch;margin:0 0 24px;font-size:.95rem}
+.soc{display:flex;gap:12px;perspective:600px}
+.soc a{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;color:var(--ink);
+  background:linear-gradient(150deg,rgba(90,65,200,.7),rgba(20,14,50,.9));border:1px solid rgba(190,170,255,.25);
+  box-shadow:0 1px 0 rgba(255,255,255,.15) inset,0 5px 0 #120c2e,0 12px 18px -6px rgba(0,0,0,.8);transition:transform .2s,box-shadow .2s}
+.soc a:hover,.soc a:focus-visible{transform:translateY(-4px) translateZ(20px);box-shadow:0 1px 0 rgba(255,255,255,.25) inset,0 9px 0 #120c2e,0 0 26px 2px rgba(255,79,216,.55);outline:none}
+.soc a:focus-visible{outline:2px solid var(--magenta);outline-offset:3px}
+.soc svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+h3{font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:500;font-size:1rem;color:var(--ink);margin:0 0 16px}
+ul{list-style:none;margin:0;padding:0;display:grid;gap:11px}
+.cols li a{color:var(--muted);text-decoration:none;font-size:.95rem;transition:color .2s,text-shadow .2s}
+.cols li a:hover,.cols li a:focus-visible{color:#fff;text-shadow:0 0 14px rgba(255,79,216,.8);outline:none}
+.cols li a:focus-visible{outline:2px solid var(--magenta);outline-offset:3px;border-radius:4px}
+.bar{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:22px 0;border-top:1px solid var(--line);color:var(--muted);font-size:.88rem}
+.bar a{color:var(--muted);text-decoration:none;margin-left:20px}
+.bar a:hover{color:#fff}
+/* wordmark */
+.wmstage{position:relative;z-index:1;perspective:1200px;margin-top:8px;height:clamp(90px,17vw,250px);overflow:hidden}
+.wm{position:absolute;left:50%;top:0;transform:translateX(-50%) rotateX(var(--wx,0deg)) rotateY(var(--wy,0deg));transition:transform .4s ease-out;
+  font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:800;font-size:clamp(3.4rem,16.5vw,17rem);letter-spacing:-.045em;line-height:1;white-space:nowrap;user-select:none;pointer-events:none;
+  color:transparent;-webkit-text-stroke:1.5px rgba(200,180,255,.5);
+  background:linear-gradient(100deg,rgba(124,92,255,.05) 20%,rgba(255,79,216,.55) 45%,rgba(124,92,255,.05) 70%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;
+  animation:sweep 7s ease-in-out infinite;filter:drop-shadow(0 0 22px rgba(255,79,216,.55))}
+@keyframes sweep{0%,100%{background-position:100% 0}50%{background-position:0 0}}
+@media (max-width:900px){
+  footer{padding-top:72px}
+  .cface{grid-template-columns:1fr;padding:30px 24px}
+  .cols{grid-template-columns:1fr 1fr;gap:34px}
+  .brandcol{grid-column:1/3}
+  .cta{transform:none}
+}
+@media (max-width:480px){form{flex-direction:column}button.go{width:100%}.bar a{margin:0 16px 0 0}}
+@media (prefers-reduced-motion:reduce){.wm{animation:none;background-position:50% 0}.cta,.wm{transition:none}}
+</style>
+</head>
+<body>
+<div class="demo"></div>
+<footer>
+  <div class="wrap">
+    <div class="stage" id="stage">
+      <div class="cta" id="cta"><div class="cface" id="cface">
+        <div><h2>Ready to create something remarkable?</h2><p>Get product updates, new templates and tips in your inbox, once a month.</p></div>
+        <div>
+          <form id="f" novalidate><input id="em" type="email" placeholder="you@example.com" aria-label="Email address" autocomplete="email" required><button class="go" type="submit">Subscribe</button></form>
+          <p class="msg" id="msg" role="status" aria-live="polite"></p>
+        </div>
+      </div></div>
+    </div>
+
+    <div class="cols">
+      <div class="brandcol">
+        <div class="brand">
+          <svg class="gem" viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff4fd8"/><stop offset="1" stop-color="#7c5cff"/></linearGradient></defs><path d="M20 3 36 15 20 37 4 15Z" fill="url(#g)"/><path d="M4 15H36M20 3 14 15 20 37 26 15Z" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="1.2" stroke-linejoin="round"/></svg>
+          YourBrand
+        </div>
+        <p class="about">Tools and templates that help creators design, edit and publish faster.</p>
+        <div class="soc">
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8"/></svg></a>
+          <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24"><rect x="2.5" y="5.5" width="19" height="13" rx="4"/><path d="m10 9.5 5 2.5-5 2.5Z"/></svg></a>
+          <a href="#" aria-label="X"><svg viewBox="0 0 24 24"><path d="M4 4l16 16M20 4 4 20"/></svg></a>
+          <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 11v6M8 7.5v.5M12 17v-6M12 13c0-2 4-2.500 4 0v4"/></svg></a>
+        </div>
+      </div>
+      <nav aria-label="Product"><h3>Product</h3><ul><li><a href="#">Features</a></li><li><a href="#">Pricing</a></li><li><a href="#">Templates</a></li><li><a href="#">What's new</a></li></ul></nav>
+      <nav aria-label="Company"><h3>Company</h3><ul><li><a href="#">About us</a></li><li><a href="#">Careers</a></li><li><a href="#">Blog</a></li><li><a href="#">Contact</a></li></ul></nav>
+      <nav aria-label="Support"><h3>Support</h3><ul><li><a href="#">Help centre</a></li><li><a href="#">Community</a></li><li><a href="#">Privacy policy</a></li><li><a href="#">Terms of use</a></li></ul></nav>
+    </div>
+
+    <div class="bar"><span>© 2026 YourBrand. All rights reserved.</span><span>Made with care in India</span></div>
+  </div>
+  <div class="wmstage" aria-hidden="true"><div class="wm" id="wm">YOURBRAND</div></div>
+</footer>
+<script>
+(function(){
+  var fine=matchMedia('(pointer:fine)').matches&&matchMedia('(min-width:901px)').matches,calm=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var cta=document.getElementById('cta'),face=document.getElementById('cface'),wm=document.getElementById('wm'),ft=document.querySelector('footer');
+  face.addEventListener('pointermove',function(e){var r=face.getBoundingClientRect();face.style.setProperty('--mx',((e.clientX-r.left)/r.width*100)+'%');face.style.setProperty('--my',((e.clientY-r.top)/r.height*100)+'%')});
+  if(fine&&!calm){
+    cta.parentNode.addEventListener('pointermove',function(e){
+      var r=cta.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;
+      cta.classList.add('live');cta.style.setProperty('--ry',((x-.5)*8)+'deg');cta.style.setProperty('--rx',((.5-y)*6)+'deg');
+    });
+    cta.parentNode.addEventListener('pointerleave',function(){cta.classList.remove('live');cta.style.setProperty('--ry','0deg');cta.style.setProperty('--rx','0deg')});
+    ft.addEventListener('pointermove',function(e){
+      var r=ft.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+      wm.style.setProperty('--wy',(x*14)+'deg');wm.style.setProperty('--wx',(y*-10)+'deg');
+    });
+  }
+  document.getElementById('f').addEventListener('submit',function(e){
+    e.preventDefault();var m=document.getElementById('msg'),v=document.getElementById('em').value;
+    if(!/^\S+@\S+\.\S+$/.test(v)){m.style.color='#ffb4c8';m.textContent='Enter a valid email address.';return}
+    m.style.color='';m.textContent='Subscribed. Check your inbox for a welcome email.';e.target.reset();
+  });
+})();
+</script>
+</body>
+</html>
