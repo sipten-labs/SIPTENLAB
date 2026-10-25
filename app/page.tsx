@@ -59,7 +59,6 @@ const GithubIcon = ({ className }: { className?: string }) => (
 
 // ============================================================================
 // CUSTOM 3D NEON "SIPTEN LABS" RIBBON LOGO & FUTURISTIC BRAND HEADER
-// Matches bns logo 2.png (3D Cyan-Blue-Purple Ribbon 'S' inside Glowing Ring)
 // ============================================================================
 function SiptenLabsLogoMark({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
   const dimensions =
@@ -77,28 +76,24 @@ function SiptenLabsLogoMark({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
         className="w-full h-full relative z-10 overflow-visible drop-shadow-[0_0_12px_rgba(56,189,248,0.45)]"
       >
         <defs>
-          {/* Neon Outer Ring Gradient */}
           <linearGradient id="siptenRingGrad" x1="0%" y1="100%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="#00f2fe" />
             <stop offset="50%" stopColor="#3b82f6" />
             <stop offset="100%" stopColor="#d946ef" />
           </linearGradient>
 
-          {/* Top 3D Ribbon Gradient (Electric Cyan to Royal Blue) */}
           <linearGradient id="sTopRibbon" x1="0%" y1="100%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="#2563eb" />
             <stop offset="45%" stopColor="#06b6d4" />
             <stop offset="100%" stopColor="#67e8f9" />
           </linearGradient>
 
-          {/* Middle 3D Fold Gradient (Deep Blue to Cyan Highlight) */}
           <linearGradient id="sMidRibbon" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#38bdf8" />
             <stop offset="55%" stopColor="#2563eb" />
             <stop offset="100%" stopColor="#1e1b4b" />
           </linearGradient>
 
-          {/* Bottom 3D Ribbon Gradient (Magenta Pink to Electric Purple & Blue) */}
           <linearGradient id="sBotRibbon" x1="0%" y1="100%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="#f472b6" />
             <stop offset="45%" stopColor="#a855f7" />
@@ -106,10 +101,8 @@ function SiptenLabsLogoMark({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
           </linearGradient>
         </defs>
 
-        {/* Dark Obsidian Circle Core */}
         <circle cx="60" cy="60" r="54" fill="#040711" />
 
-        {/* Glowing Neon Outer Ring */}
         <circle
           cx="60"
           cy="60"
@@ -119,7 +112,6 @@ function SiptenLabsLogoMark({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
           strokeWidth="3.2"
         />
 
-        {/* Subtle Inner Ring */}
         <circle
           cx="60"
           cy="60"
@@ -130,11 +122,8 @@ function SiptenLabsLogoMark({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
           strokeOpacity="0.4"
         />
 
-        {/* Top-Right Star Flare on Ring */}
         <circle cx="98" cy="22" r="2.2" fill="#f0abfc" />
 
-        {/* --- 3D FOLDED RIBBON 'S' GEOMETRY --- */}
-        {/* 1. Top Diagonal Ribbon Wing */}
         <path
           d="M 33 43 L 78 17 L 78 35 L 44 54 C 36 58, 30 50, 33 43 Z"
           fill="url(#sTopRibbon)"
@@ -142,7 +131,6 @@ function SiptenLabsLogoMark({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
           strokeWidth="0.8"
         />
 
-        {/* 2. Bottom Diagonal Ribbon Wing */}
         <path
           d="M 86 73 L 40 99 L 55 104 L 88 85 C 92 81, 90 75, 86 73 Z"
           fill="url(#sBotRibbon)"
@@ -150,7 +138,6 @@ function SiptenLabsLogoMark({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
           strokeWidth="0.8"
         />
 
-        {/* 3. Center 3D Sweeping S-Spine (Overlapping for 3D Depth) */}
         <path
           d="M 33 43 C 29 51, 35 58, 46 62 L 82 75 C 90 78, 90 85, 84 88 L 72 79 C 77 77, 75 72, 68 69 L 36 57 C 28 53, 29 46, 33 43 Z"
           fill="url(#sMidRibbon)"
@@ -165,10 +152,8 @@ function SiptenLabsLogoMark({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
 function SiptenLabsWordmark({ compact = false }: { compact?: boolean }) {
   return (
     <div className="flex flex-col select-none">
-      {/* Futuristic "SIPTEN" with glowing cyan middle bar on 'E' */}
       <div className="flex items-center tracking-[0.14em] font-black text-white leading-none">
         <span className={compact ? "text-base" : "text-lg"}>SIPT</span>
-        {/* Custom Futuristic 'E' with Cyan-Blue Middle Bar */}
         <span
           className={`inline-flex flex-col justify-between mx-0.5 ${
             compact ? "w-3 h-3.5" : "w-3.5 h-4"
@@ -181,7 +166,6 @@ function SiptenLabsWordmark({ compact = false }: { compact?: boolean }) {
         <span className={`${compact ? "text-base" : "text-lg"} ml-0.5`}>N</span>
       </div>
 
-      {/* "— L A B S —" Row */}
       <div className="flex items-center gap-1.5 mt-1">
         <span className="h-[1.5px] w-3 bg-linear-to-r from-cyan-400 to-blue-500 rounded-full" />
         <span
@@ -194,7 +178,6 @@ function SiptenLabsWordmark({ compact = false }: { compact?: boolean }) {
         <span className="h-[1.5px] w-3 bg-linear-to-r from-blue-500 to-purple-500 rounded-full" />
       </div>
 
-      {/* Micro Tagline: IDEAS × CODE × SOLUTIONS */}
       {!compact && (
         <span className="text-[7.5px] font-mono tracking-[0.16em] text-slate-400 uppercase mt-1">
           IDEAS × CODE × SOLUTIONS
@@ -443,18 +426,14 @@ const FAQS_DATA = [
 
 export default function Portfolio() {
   const [activeNav, setActiveNav] = useState("Home");
-
-  // LIGHT / DARK THEME STATE
   const [theme, setTheme] = useState<"dark" | "light">("dark");
 
   const fullRoleText = "Fullstack SaaS & App Developer | Data & Automation Specialist";
   const [typedRole, setTypedRole] = useState("");
 
-  // Starts at 129+ and automatically increments every time the portfolio is opened!
   const [visitorCount, setVisitorCount] = useState(129);
   const [counts, setCounts] = useState({ projects: 0, tools: 0, mindset: 0 });
 
-  // AUTO-PLAYING SEQUENTIAL VIDEOS IN HERO CIRCLE (/demo.mp4 -> /demo1.mp4 -> loop)
   const heroVideos = ["/demo.mp4", "/demo1.mp4"];
   const [currentVideoIdx, setCurrentVideoIdx] = useState(0);
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -469,18 +448,15 @@ export default function Portfolio() {
     level: 65,
   });
 
-  // Certificate Popup + Interactive Zoom State
   const [selectedJourneyIdx, setSelectedJourneyIdx] = useState(0);
   const [popupCert, setPopupCert] = useState<JourneyCertItem | null>(null);
   const [certZoom, setCertZoom] = useState<number>(100);
 
-  // FAQs Interactive Typewriter States
   const [selectedFaqIdx, setSelectedFaqIdx] = useState<number>(0);
   const [typedFaqAnswer, setTypedFaqAnswer] = useState("");
   const [isAnswerTyping, setIsAnswerTyping] = useState(false);
   const faqScrollRef = useRef<HTMLDivElement | null>(null);
 
-  // Direct Footer Contact Form States
   const [contactName, setContactName] = useState("");
   const [contactEmail, setContactEmail] = useState("");
   const [contactMessage, setContactMessage] = useState("");
@@ -488,7 +464,6 @@ export default function Portfolio() {
   const [mailSentStatus, setMailSentStatus] = useState<"idle" | "success" | "error">("idle");
   const messageInputRef = useRef<HTMLInputElement | null>(null);
 
-  // Slim No-Login Comment States (Starts with 7 realistic client reviews!)
   const [autoGuestName, setAutoGuestName] = useState("Guest #402");
   const [autoDeviceTag, setAutoDeviceTag] = useState("Verified Visitor");
   const [customAuthorName, setCustomAuthorName] = useState("");
@@ -496,15 +471,11 @@ export default function Portfolio() {
   const [commentSuccess, setCommentSuccess] = useState(false);
   const [comments, setComments] = useState<CommentItem[]>(INITIAL_CLIENT_COMMENTS);
 
-  // Helper to open certificate modal and reset zoom to 100%
   const handleOpenCertModal = (cert: JourneyCertItem) => {
     setCertZoom(100);
     setPopupCert(cert);
   };
 
-  // ============================================================================
-  // INSTANT 1-CLICK RESUME AUTO-DOWNLOAD HANDLER (NO PAGE NAVIGATION!)
-  // ============================================================================
   const handleAutoDownloadResume = () => {
     setActiveNav("Resume");
 
@@ -586,7 +557,6 @@ export default function Portfolio() {
     }
   }, [currentVideoIdx]);
 
-  // Typewriter Effect when user clicks any FAQ question
   useEffect(() => {
     const fullAnswer = FAQS_DATA[selectedFaqIdx].a;
     let charIdx = 0;
@@ -682,7 +652,6 @@ export default function Portfolio() {
       setActiveNav("Home");
     }
 
-    // LIVE VISITOR COUNTER: Starts from 129+ and increments automatically every time portfolio is opened!
     const savedVisits = localStorage.getItem("sipten_portfolio_visits_v129");
     const baseVisits = savedVisits ? Math.max(129, parseInt(savedVisits, 10)) : 128;
     const nextVisits = baseVisits + 1;
@@ -717,7 +686,6 @@ export default function Portfolio() {
     setAutoGuestName(`Guest #${guestId}`);
     setAutoDeviceTag(`${browser} • ${os}`);
 
-    // Load 7 initial client comments + any newly posted user comments!
     const savedComments = localStorage.getItem("sipten_client_reviews_v7");
     if (savedComments) {
       try {
@@ -843,7 +811,6 @@ export default function Portfolio() {
     }
   };
 
-  // Desktop Left Sidebar Items
   const navItems = [
     { name: "Home", icon: Home, target: "home", isResumeDownload: false },
     { name: "About", icon: User, target: "about", isResumeDownload: false },
@@ -856,7 +823,6 @@ export default function Portfolio() {
     { name: "Contact", icon: Mail, target: "contact", isResumeDownload: false },
   ];
 
-  // Mobile App Bottom Dock Items
   const mobileDockItems = [
     { name: "Home", label: "Home", icon: Home, target: "home" },
     { name: "Projects", label: "Work", icon: FolderGit2, target: "projects" },
@@ -1023,9 +989,6 @@ export default function Portfolio() {
           scrollbar-width: none;
         }
 
-        /* =================================================================
-           FULL CRISP WHITE LIGHT MODE OVERRIDES WHEN "LIGHT" IS CLICKED!
-        ================================================================= */
         .light-mode aside,
         .light-mode header.mobile-app-bar,
         .light-mode nav.mobile-bottom-dock,
@@ -1089,9 +1052,7 @@ export default function Portfolio() {
         }
       `}</style>
 
-      {/* =====================================================================
-          MOBILE NATIVE APP TOP HEADER BAR (WITH 3D SIPTEN LABS LOGO!)
-      ===================================================================== */}
+      {/* MOBILE NATIVE APP TOP HEADER BAR */}
       <header className="mobile-app-bar lg:hidden sticky top-0 z-40 bg-[#060a15]/92 backdrop-blur-2xl border-b border-slate-800/80 px-4 py-2.5 flex items-center justify-between shadow-lg">
         <div
           onClick={() => scrollToSection("home", "Home")}
@@ -1101,7 +1062,6 @@ export default function Portfolio() {
           <SiptenLabsWordmark compact />
         </div>
 
-        {/* Mobile Quick App Actions: Resume Download + Studio + Theme Toggle */}
         <div className="flex items-center gap-2">
           <button
             type="button"
@@ -1129,7 +1089,7 @@ export default function Portfolio() {
         </div>
       </header>
 
-      {/* ================= DESKTOP LEFT SIDEBAR (WITH 3D SIPTEN LABS LOGO!) ================= */}
+      {/* DESKTOP LEFT SIDEBAR */}
       <aside className="hidden lg:flex lg:w-64 bg-[#060a15] border-r border-slate-800/80 flex-col justify-between p-5 lg:fixed lg:h-screen z-30 overflow-y-auto">
         <div>
           <div
@@ -1183,7 +1143,6 @@ export default function Portfolio() {
           </nav>
         </div>
 
-        {/* WORKING LIGHT / DARK THEME TOGGLE SWITCH */}
         <div className="mt-6 pt-4 border-t border-slate-800/60">
           <div className="flex items-center bg-[#0b1122] p-1 rounded-xl border border-slate-800 mb-2.5">
             <button
@@ -1215,9 +1174,7 @@ export default function Portfolio() {
         </div>
       </aside>
 
-      {/* =====================================================================
-          MOBILE FLOATING BOTTOM APP DOCK
-      ===================================================================== */}
+      {/* MOBILE FLOATING BOTTOM APP DOCK */}
       <nav className="mobile-bottom-dock lg:hidden fixed bottom-3 inset-x-3 z-50 bg-[#060b18]/92 backdrop-blur-2xl border border-cyan-500/30 rounded-2xl px-1.5 py-1.5 shadow-[0_12px_40px_rgba(0,0,0,0.9),0_0_25px_rgba(6,182,212,0.2)] flex items-center justify-between">
         {mobileDockItems.map((item) => {
           const Icon = item.icon;
@@ -1243,10 +1200,10 @@ export default function Portfolio() {
         })}
       </nav>
 
-      {/* ================= MAIN FULL-SCREEN CONTENT ================= */}
+      {/* MAIN FULL-SCREEN CONTENT */}
       <main className="flex-1 lg:ml-64 px-3.5 sm:px-8 md:px-12 pt-4 pb-28 lg:py-6 max-w-6xl w-full mx-auto space-y-12 sm:space-y-20">
         
-        {/* ---------------- FIRST SCREEN: CLEAN FULL HERO WITH AUTO-PLAYING VIDEOS ---------------- */}
+        {/* HERO SECTION */}
         <section id="home" className="lg:min-h-[calc(100vh-3rem)] flex flex-col justify-center">
           <div className="flex-1 flex flex-col justify-between relative rounded-3xl bg-linear-to-br from-[#0b1329] via-[#070b17] to-[#0c152c] border border-slate-800/90 p-5 sm:p-10 md:p-12 overflow-hidden shadow-[0_0_70px_-15px_rgba(37,99,235,0.25)]">
             
@@ -1255,7 +1212,6 @@ export default function Portfolio() {
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center relative z-10 my-auto">
               
-              {/* Left Hero Content */}
               <div className="lg:col-span-7 space-y-4 sm:space-y-5 text-center lg:text-left">
                 <p className="text-slate-300 text-base sm:text-xl md:text-2xl font-medium tracking-wide">
                   Hello, I&apos;m
@@ -1299,7 +1255,6 @@ export default function Portfolio() {
                   </button>
                 </div>
 
-                {/* Direct Working Social Links */}
                 <div className="flex items-center justify-center lg:justify-start gap-3 pt-2 sm:pt-3">
                   <a
                     href="https://www.linkedin.com/in/sipten-raja-814a17429"
@@ -1338,10 +1293,6 @@ export default function Portfolio() {
                 </div>
               </div>
 
-              {/* =================================================================
-                  RIGHT SIDE: SEQUENTIAL AUTO-PLAYING VIDEOS (/demo.mp4 & /demo1.mp4)
-                  Muted, No Controls, No Seeking, Seamless Infinite Loop!
-              ================================================================= */}
               <div className="lg:col-span-5 flex flex-col items-center justify-center">
                 <div className="relative w-56 h-56 sm:w-76 sm:h-76 md:w-84 md:h-84 rounded-full p-1.5 bg-linear-to-tr from-cyan-400 via-blue-500 to-purple-500 shadow-[0_0_65px_rgba(34,211,238,0.35)]">
                   <div className="w-full h-full rounded-full bg-[#040710] relative overflow-hidden select-none pointer-events-none">
@@ -1373,7 +1324,6 @@ export default function Portfolio() {
 
             </div>
 
-            {/* 3D EMBOSSED STATS BAR */}
             <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 mt-8 sm:mt-10 pt-6 sm:pt-7 border-t border-slate-800/80 relative z-10">
               <div className="relative rounded-2xl bg-linear-to-b from-[#132042] via-[#0b1329] to-[#070c1a] p-3.5 sm:p-4 border border-cyan-400/35 shadow-[0_14px_28px_rgba(0,0,0,0.65),inset_0_2px_12px_rgba(34,211,238,0.15)]">
                 <h3
@@ -1799,7 +1749,7 @@ export default function Portfolio() {
           </section>
         </RevealOnScroll>
 
-        {/* 5. MY JOURNEY + AUTO-DOWNLOAD RESUME BUTTON */}
+        {/* 5. MY JOURNEY */}
         <RevealOnScroll>
           <section id="journey" className="rounded-3xl bg-[#080d1d] border border-slate-800/80 p-5 sm:p-10 shadow-2xl scroll-mt-16 lg:scroll-mt-8 space-y-8">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -1947,7 +1897,7 @@ export default function Portfolio() {
           </section>
         </RevealOnScroll>
 
-        {/* 6. CLEAN INTERACTIVE FAQS SECTION + TRUST BUILDING CARD BELOW IT */}
+        {/* 6. CLEAN INTERACTIVE FAQS SECTION */}
         <RevealOnScroll>
           <section
             id="faqs"
@@ -1980,7 +1930,6 @@ export default function Portfolio() {
               </div>
             </div>
 
-            {/* SINGLE-LINE HORIZONTAL SCROLLABLE QUESTIONS BAR */}
             <div className="relative">
               <div
                 ref={faqScrollRef}
@@ -2007,7 +1956,6 @@ export default function Portfolio() {
               </div>
             </div>
 
-            {/* CLEAN LIVE TYPEWRITER ANSWER DISPLAY BOX */}
             <div className="rounded-3xl bg-linear-to-b from-[#0b1530] to-[#050914] border border-cyan-500/35 p-5 sm:p-8 shadow-2xl space-y-4 relative overflow-hidden">
               <div className="absolute -top-20 right-10 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
 
@@ -2034,7 +1982,6 @@ export default function Portfolio() {
               </div>
             </div>
 
-            {/* TRUST-BUILDING SECTION BELOW FAQS */}
             <div className="rounded-3xl bg-linear-to-r from-[#0d1838] via-[#0a1229] to-[#141036] border border-cyan-400/30 p-5 sm:p-9 shadow-xl space-y-6">
               <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-800/80 pb-5">
                 <div className="space-y-2 max-w-2xl">
@@ -2087,7 +2034,7 @@ export default function Portfolio() {
           </section>
         </RevealOnScroll>
 
-        {/* 7. SLEEK, SLIM CLIENT REVIEWS & COMMENTS SECTION */}
+        {/* 7. CLIENT REVIEWS & COMMENTS SECTION */}
         <RevealOnScroll>
           <section
             id="feedback"
@@ -2103,7 +2050,6 @@ export default function Portfolio() {
               </span>
             </div>
 
-            {/* Smooth Moving Marquee with 7 Realistic Client Reviews */}
             <div className="relative w-full overflow-hidden py-2 mb-4 before:absolute before:left-0 before:top-0 before:bottom-0 before:w-12 before:bg-linear-to-r before:from-[#080d1d] before:to-transparent before:z-10 after:absolute after:right-0 after:top-0 after:bottom-0 after:w-12 after:bg-linear-to-l after:from-[#080d1d] after:to-transparent after:z-10">
               <div className="animate-marquee gap-4">
                 {[...comments, ...comments].map((item, idx) => (
@@ -2184,9 +2130,7 @@ export default function Portfolio() {
           </section>
         </RevealOnScroll>
 
-        {/* =====================================================================
-            8. UNIFIED GLOWING FOOTER + DIRECT CONTACT BOX
-        ===================================================================== */}
+        {/* 8. UNIFIED GLOWING FOOTER + DIRECT CONTACT BOX */}
         <footer
           id="contact"
           className="group/footer relative rounded-3xl bg-[#05030d] border border-purple-500/25 hover:border-purple-400/50 pt-8 sm:pt-10 px-5 sm:px-12 pb-0 overflow-hidden shadow-[0_0_90px_-20px_rgba(139,92,246,0.3)] hover:shadow-[0_0_110px_-10px_rgba(168,85,247,0.5)] transition-all duration-500 scroll-mt-16 lg:scroll-mt-8"
@@ -2282,7 +2226,6 @@ export default function Portfolio() {
             </div>
           </div>
 
-          {/* Middle 4-Column Links Grid (With 3D Sipten Labs Brand Mark!) */}
           <div className="relative z-10 grid grid-cols-2 md:grid-cols-12 gap-8 pb-10 border-b border-slate-800/80 text-xs">
             <div className="col-span-2 md:col-span-5 space-y-3.5">
               <div className="flex items-center gap-3 group">
@@ -2449,9 +2392,7 @@ export default function Portfolio() {
 
       </main>
 
-      {/* =====================================================================
-          CERTIFICATE IMAGE POPUP MODAL (100% FULL UNCROPPED VIEW + OPTIONAL ZOOM!)
-      ===================================================================== */}
+      {/* CERTIFICATE IMAGE POPUP MODAL */}
       {popupCert && (
         <div
           className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-3 sm:p-6"
@@ -2461,7 +2402,6 @@ export default function Portfolio() {
             className="w-full max-w-5xl bg-[#080d1d] border border-cyan-500/40 rounded-3xl overflow-hidden shadow-[0_0_80px_rgba(34,211,238,0.25)] flex flex-col max-h-[94vh]"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Modal Top Header with Zoom Controls */}
             <div className="px-5 py-3.5 bg-[#0b1329] border-b border-slate-800 flex flex-wrap items-center justify-between gap-3 shrink-0">
               <div className="flex items-center gap-2.5">
                 <ShieldCheck className="w-5 h-5 text-emerald-400 shrink-0" />
@@ -2473,7 +2413,6 @@ export default function Portfolio() {
                 </div>
               </div>
 
-              {/* Interactive Zoom Controls Bar */}
               <div className="flex items-center gap-2">
                 <div className="flex items-center bg-[#060a17] p-1 rounded-xl border border-slate-800 gap-1">
                   <button
@@ -2515,7 +2454,6 @@ export default function Portfolio() {
               </div>
             </div>
 
-            {/* Uncropped Full Certificate Container: Fits 100% inside screen by default, zooms cleanly when clicked! */}
             <div className="p-3 sm:p-5 bg-[#040710] overflow-auto flex-1 flex">
               <img
                 src={popupCert.certImage}
