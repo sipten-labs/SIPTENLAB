@@ -295,7 +295,6 @@ interface CommentItem {
   date: string;
 }
 
-// 7 REALISTIC CLIENT REVIEWS
 const INITIAL_CLIENT_COMMENTS: CommentItem[] = [
   {
     name: "Marcus Vance",
@@ -348,7 +347,6 @@ const INITIAL_CLIENT_COMMENTS: CommentItem[] = [
   },
 ];
 
-// ALL 18 EXACT FAQS
 const FAQS_DATA = [
   {
     q: "1. Why should I choose you over other developers or agencies?",
@@ -485,7 +483,7 @@ export default function Portfolio() {
       <rect x="25" y="25" width="850" height="175" rx="22" fill="#101f42"/>
       <text x="65" y="88" fill="#22d3ee" font-family="Arial, sans-serif" font-size="13" font-weight="bold" letter-spacing="2">SIPTEN LABS • OFFICIAL EXECUTIVE RESUME</text>
       <text x="65" y="138" fill="#ffffff" font-family="Arial, sans-serif" font-size="42" font-weight="900">SIPTEN RAJA</text>
-      <text x="65" y="172" fill="#93c5fd" font-family="Arial, sans-serif" font-size="16" font-weight="bold">Fullstack SaaS &amp; Mobile App Developer | 3D Web &amp; Figma UI | Data &amp; Excel Automation</text>
+      <text x="65" y="172" fill="#93c5fd" font-family="Arial, sans-serif" font-size="16" font-weight="bold">Fullstack SaaS & Mobile App Developer | 3D Web & Figma UI | Data & Excel Automation</text>
       <text x="600" y="95" fill="#e2e8f0" font-family="Arial, sans-serif" font-size="13">Email: siptenfreelance@gmail.com</text>
       <text x="600" y="122" fill="#e2e8f0" font-family="Arial, sans-serif" font-size="13">Location: Islampur, WB, India</text>
       <text x="600" y="149" fill="#38bdf8" font-family="Arial, sans-serif" font-size="13">GitHub: github.com/sipten-labs</text>
@@ -494,39 +492,39 @@ export default function Portfolio() {
       <text x="65" y="248" fill="#22d3ee" font-family="Arial, sans-serif" font-size="15" font-weight="bold" letter-spacing="1.5">01 // PROFESSIONAL SUMMARY</text>
       <line x1="65" y1="260" x2="835" y2="260" stroke="#1e293b" stroke-width="2"/>
       <text x="65" y="290" fill="#cbd5e1" font-family="Arial, sans-serif" font-size="14">Fullstack Developer, UI/UX Designer, and Data Automation Specialist building scalable SaaS platforms,</text>
-      <text x="65" y="314" fill="#cbd5e1" font-family="Arial, sans-serif" font-size="14">modern web &amp; mobile applications, interactive 3D WebGL experiences, and automated Excel / Power Query</text>
-      <text x="65" y="338" fill="#cbd5e1" font-family="Arial, sans-serif" font-size="14">&amp; Power BI workflows for global clients.</text>
+      <text x="65" y="314" fill="#cbd5e1" font-family="Arial, sans-serif" font-size="14">modern web & mobile applications, interactive 3D WebGL experiences, and automated Excel / Power Query</text>
+      <text x="65" y="338" fill="#cbd5e1" font-family="Arial, sans-serif" font-size="14">& Power BI workflows for global clients.</text>
 
       <text x="65" y="395" fill="#22d3ee" font-family="Arial, sans-serif" font-size="15" font-weight="bold" letter-spacing="1.5">02 // CORE TECHNICAL SKILLS</text>
       <line x1="65" y1="407" x2="835" y2="407" stroke="#1e293b" stroke-width="2"/>
       <rect x="65" y="425" width="770" height="45" rx="10" fill="#0f1b38"/>
-      <text x="82" y="453" fill="#ffffff" font-family="Arial, sans-serif" font-size="14" font-weight="bold">Fullstack &amp; SaaS:</text>
+      <text x="82" y="453" fill="#ffffff" font-family="Arial, sans-serif" font-size="14" font-weight="bold">Fullstack & SaaS:</text>
       <text x="220" y="453" fill="#38bdf8" font-family="Arial, sans-serif" font-size="14">Next.js, React.js, TypeScript, JavaScript, Node.js, MongoDB, SQL, HTML5, CSS3, Tailwind, Git</text>
 
       <rect x="65" y="482" width="770" height="45" rx="10" fill="#0f1b38"/>
-      <text x="82" y="510" fill="#ffffff" font-family="Arial, sans-serif" font-size="14" font-weight="bold">Data &amp; Automation:</text>
+      <text x="82" y="510" fill="#ffffff" font-family="Arial, sans-serif" font-size="14" font-weight="bold">Data & Automation:</text>
       <text x="230" y="510" fill="#34d399" font-family="Arial, sans-serif" font-size="14">Advanced MS-Excel, Power Query ETL, Power BI Dashboards, VBA Macros, Python, Data Analysis</text>
 
       <rect x="65" y="539" width="770" height="45" rx="10" fill="#0f1b38"/>
-      <text x="82" y="567" fill="#ffffff" font-family="Arial, sans-serif" font-size="14" font-weight="bold">3D Web &amp; Design:</text>
+      <text x="82" y="567" fill="#ffffff" font-family="Arial, sans-serif" font-size="14" font-weight="bold">3D Web & Design:</text>
       <text x="220" y="567" fill="#c084fc" font-family="Arial, sans-serif" font-size="14">Figma UI/UX Prototyping, Mobile App UI Systems, Three.js, Interactive 60FPS WebGL Shaders</text>
 
       <text x="65" y="638" fill="#22d3ee" font-family="Arial, sans-serif" font-size="15" font-weight="bold" letter-spacing="1.5">03 // LIVE PRODUCTION PROJECTS (VERIFIED PROOF OF WORK)</text>
       <line x1="65" y1="650" x2="835" y2="650" stroke="#1e293b" stroke-width="2"/>
       <text x="65" y="682" fill="#ffffff" font-family="Arial, sans-serif" font-size="15" font-weight="bold">• Nexa Financial Platform (Fintech SaaS):</text>
       <text x="380" y="682" fill="#38bdf8" font-family="Arial, sans-serif" font-size="14">https://nexa-financial-platform.vercel.app/</text>
-      <text x="65" y="715" fill="#ffffff" font-family="Arial, sans-serif" font-size="15" font-weight="bold">• SalesFlow BI &amp; Revenue CRM App:</text>
+      <text x="65" y="715" fill="#ffffff" font-family="Arial, sans-serif" font-size="15" font-weight="bold">• SalesFlow BI & Revenue CRM App:</text>
       <text x="350" y="715" fill="#38bdf8" font-family="Arial, sans-serif" font-size="14">https://salesflow-tawny.vercel.app/</text>
       <text x="65" y="748" fill="#ffffff" font-family="Arial, sans-serif" font-size="15" font-weight="bold">• Savora Restaurant Fullstack Web App:</text>
       <text x="365" y="748" fill="#38bdf8" font-family="Arial, sans-serif" font-size="14">https://savora-restaurant-psi.vercel.app/</text>
-      <text x="65" y="781" fill="#ffffff" font-family="Arial, sans-serif" font-size="15" font-weight="bold">• Official GitHub Codebase &amp; Studio:</text>
+      <text x="65" y="781" fill="#ffffff" font-family="Arial, sans-serif" font-size="15" font-weight="bold">• Official GitHub Codebase & Studio:</text>
       <text x="355" y="781" fill="#38bdf8" font-family="Arial, sans-serif" font-size="14">https://github.com/sipten-labs</text>
 
-      <text x="65" y="845" fill="#22d3ee" font-family="Arial, sans-serif" font-size="15" font-weight="bold" letter-spacing="1.5">04 // VERIFIED EDUCATION &amp; DIPLOMAS</text>
+      <text x="65" y="845" fill="#22d3ee" font-family="Arial, sans-serif" font-size="15" font-weight="bold" letter-spacing="1.5">04 // VERIFIED EDUCATION & DIPLOMAS</text>
       <line x1="65" y1="857" x2="835" y2="857" stroke="#1e293b" stroke-width="2"/>
 
       <rect x="65" y="878" width="770" height="68" rx="12" fill="#0f1b38"/>
-      <text x="85" y="906" fill="#ffffff" font-family="Arial, sans-serif" font-size="16" font-weight="bold">Diploma in Computer Science &amp; Technology (DCST) — 94% Excellent Grade</text>
+      <text x="85" y="906" fill="#ffffff" font-family="Arial, sans-serif" font-size="16" font-weight="bold">Diploma in Computer Science & Technology (DCST) — 94% Excellent Grade</text>
       <text x="85" y="930" fill="#94a3b8" font-family="Arial, sans-serif" font-size="13">Rashtriya Computer Literacy Drive (RCLD Authorised Centre, Islampur) • 2025 – 2026</text>
 
       <rect x="65" y="960" width="770" height="62" rx="12" fill="#0f1b38"/>
@@ -1052,7 +1050,7 @@ export default function Portfolio() {
         }
       `}</style>
 
-      {/* MOBILE NATIVE APP TOP HEADER BAR */}
+      {/* MOBILE TOP BAR */}
       <header className="mobile-app-bar lg:hidden sticky top-0 z-40 bg-[#060a15]/92 backdrop-blur-2xl border-b border-slate-800/80 px-4 py-2.5 flex items-center justify-between shadow-lg">
         <div
           onClick={() => scrollToSection("home", "Home")}
@@ -1089,7 +1087,7 @@ export default function Portfolio() {
         </div>
       </header>
 
-      {/* DESKTOP LEFT SIDEBAR */}
+      {/* DESKTOP SIDEBAR */}
       <aside className="hidden lg:flex lg:w-64 bg-[#060a15] border-r border-slate-800/80 flex-col justify-between p-5 lg:fixed lg:h-screen z-30 overflow-y-auto">
         <div>
           <div
@@ -1174,7 +1172,7 @@ export default function Portfolio() {
         </div>
       </aside>
 
-      {/* MOBILE FLOATING BOTTOM APP DOCK */}
+      {/* MOBILE BOTTOM DOCK */}
       <nav className="mobile-bottom-dock lg:hidden fixed bottom-3 inset-x-3 z-50 bg-[#060b18]/92 backdrop-blur-2xl border border-cyan-500/30 rounded-2xl px-1.5 py-1.5 shadow-[0_12px_40px_rgba(0,0,0,0.9),0_0_25px_rgba(6,182,212,0.2)] flex items-center justify-between">
         {mobileDockItems.map((item) => {
           const Icon = item.icon;
@@ -1200,7 +1198,7 @@ export default function Portfolio() {
         })}
       </nav>
 
-      {/* MAIN FULL-SCREEN CONTENT */}
+      {/* MAIN CONTENT */}
       <main className="flex-1 lg:ml-64 px-3.5 sm:px-8 md:px-12 pt-4 pb-28 lg:py-6 max-w-6xl w-full mx-auto space-y-12 sm:space-y-20">
         
         {/* HERO SECTION */}
@@ -1214,7 +1212,7 @@ export default function Portfolio() {
               
               <div className="lg:col-span-7 space-y-4 sm:space-y-5 text-center lg:text-left">
                 <p className="text-slate-300 text-base sm:text-xl md:text-2xl font-medium tracking-wide">
-                  Hello, I&apos;m
+                  Hello, I'm
                 </p>
 
                 <h1 className="text-4xl sm:text-6xl md:text-7xl font-black tracking-tight text-transparent bg-clip-text bg-linear-to-r from-white via-cyan-100 to-sky-300 drop-shadow-[0_0_35px_rgba(56,189,248,0.4)] hover:drop-shadow-[0_0_45px_rgba(56,189,248,0.85)] transition-all duration-300 cursor-default">
@@ -1400,7 +1398,7 @@ export default function Portfolio() {
               <div className="lg:col-span-7 space-y-4">
                 <ScrollTypeHeading tag="// 01. Who I Am" text="About Me" />
                 <p className="text-sm text-slate-300/90 leading-relaxed pt-1">
-                  I&apos;m Sipten Raja, a passionate developer and data specialist. I build Fullstack SaaS platforms, mobile apps, 3D websites, Figma UI designs, and automated Excel/Power Query systems.
+                  I'm Sipten Raja, a passionate developer and data specialist. I build Fullstack SaaS platforms, mobile apps, 3D websites, Figma UI designs, and automated Excel/Power Query systems.
                 </p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-4 pt-3">
@@ -1459,7 +1457,7 @@ export default function Portfolio() {
                 </div>
                 <div className="p-4 rounded-2xl bg-[#0d162e] border border-slate-800/90 flex items-center justify-between">
                   <p className="text-xs sm:text-sm italic text-slate-200 font-medium">
-                    &ldquo;Small steps every day lead to big results.&rdquo;
+                    “Small steps every day lead to big results.”
                   </p>
                   <span className="text-xs text-cyan-400 font-semibold flex items-center gap-1 shrink-0">
                     Keep Going <ArrowRight className="w-3.5 h-3.5" />
@@ -2078,7 +2076,7 @@ export default function Portfolio() {
                     </div>
 
                     <p className="text-[11px] text-slate-200 italic leading-snug line-clamp-3">
-                      &ldquo;{item.text}&rdquo;
+                      “{item.text}”
                     </p>
                   </div>
                 ))}
